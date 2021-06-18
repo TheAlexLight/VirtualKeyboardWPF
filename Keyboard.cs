@@ -84,9 +84,13 @@ namespace KeyboardPanelLibrary
             buttonType.Height = keyHeight;
             buttonType.Focusable = false;
 
-            AttachedProperty.SetVirtualKeyCodeProperty(buttonType, (ushort)virtualKey);
-            AttachedProperty.SetWidthCoefficientProperty(buttonType, widthCoefficient);
-            buttonType.SetValue(WidthProperty, keyWidth * AttachedProperty.GetWidthCoefficientProperty(buttonType));
+            KeyboardAdditionalMetadata additionalMetadata = new();
+            additionalMetadata.VirtualCode = (ushort)virtualKey;
+            additionalMetadata.WidthCoefficient = widthCoefficient;
+
+            SetAdditionalMetadataProperty(buttonType, additionalMetadata);
+
+            buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
 
             return buttonType; 
         }
