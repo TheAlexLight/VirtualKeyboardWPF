@@ -1,5 +1,4 @@
-﻿using KeyboardPanelLibrary.Enums;
-using KeyboardPanelLibrary.Extensions;
+﻿using KeyboardPanelLibrary.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -136,7 +135,7 @@ namespace KeyboardPanelLibrary
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         }
 
-        public void Send(ScanCode scan)
+        public void Send(ushort scan)
         {
             INPUT[] Inputs = new INPUT[1];
             INPUT Input = new INPUT();
@@ -152,7 +151,7 @@ namespace KeyboardPanelLibrary
             var button = (ButtonBase)sender;
             uint tag = UInt32.Parse(button.Tag.ToString());
             int scanCode =  WinApi.MapVirtualKey(tag, MAPVK_VK_TO_VSC);
-            Send((ScanCode)scanCode);
+            Send((ushort)scanCode);
         }
 
         static string GetCharsFromKeys(VirtualKeyCode keys, bool shift, bool altGr)

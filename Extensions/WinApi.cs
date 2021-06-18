@@ -1,5 +1,4 @@
-﻿using KeyboardPanelLibrary.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -89,7 +88,7 @@ namespace KeyboardPanelLibrary.Extensions
         internal struct KEYBDINPUT
         {
             internal VirtualKeyCode wVk;
-            internal ScanCode wScan;
+            internal ushort wScan;
             internal KEYEVENTF dwFlags;
             internal int time;
             internal UIntPtr dwExtraInfo;
