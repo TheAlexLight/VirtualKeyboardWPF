@@ -4,389 +4,389 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtualKeyboardWPF.Enums
+namespace KeyboardPanelLibrary.Enums
 {
-    public enum VirtualKeyCode : ushort
+    public enum ScanCode : ushort
     {
-        LeftButton = 0x01,
-        RightButton = 0x02,
-        Cancel = 0x03,
-        MiddleButton = 0x04,
-        ExtraButton1 = 0x05,
-        ExtraButton2 = 0x06,
-        Back = 0x08,
-        Tab = 0x09,
-        Clear = 0x0C,
-        Return = 0x0D,
-        Shift = 0x10,
-        Control = 0x11,
+        LeftButton = 0,
+        RightButton = 0,
+        Cancel = 70,
+        MiddleButton = 0,
+        ExtraButton1 = 0,
+        ExtraButton2 = 0,
+        Back = 14,
+        Tab = 15,
+        Clear = 76,
+        Return = 28,
+        Shift = 42,
+        Control = 29,
         /// <summary></summary>
-        Menu = 0x12,
+        Menu = 56,
         /// <summary></summary>
-        Pause = 0x13,
+        Pause = 0,
         /// <summary></summary>
-        CapsLock = 0x14,
+        CapsLock = 58,
         /// <summary></summary>
-        Kana = 0x15,
+        Kana = 0,
         /// <summary></summary>
-        Hangeul = 0x15,
+        Hangeul = 0,
         /// <summary></summary>
-        Hangul = 0x15,
+        Hangul = 0,
         /// <summary></summary>
-        Junja = 0x17,
+        Junja = 0,
         /// <summary></summary>
-        Final = 0x18,
+        Final = 0,
         /// <summary></summary>
-        Hanja = 0x19,
+        Hanja = 0,
         /// <summary></summary>
-        Kanji = 0x19,
+        Kanji = 0,
         /// <summary></summary>
-        Escape = 0x1B,
+        Escape = 1,
         /// <summary></summary>
-        Convert = 0x1C,
+        Convert = 0,
         /// <summary></summary>
-        NonConvert = 0x1D,
+        NonConvert = 0,
         /// <summary></summary>
-        Accept = 0x1E,
+        Accept = 0,
         /// <summary></summary>
-        ModeChange = 0x1F,
+        ModeChange = 0,
         /// <summary></summary>
-        Space = 0x20,
+        Space = 57,
         /// <summary></summary>
-        Prior = 0x21,
+        Prior = 73,
         /// <summary></summary>
-        Next = 0x22,
+        Next = 81,
         /// <summary></summary>
-        End = 0x23,
+        End = 79,
         /// <summary></summary>
-        Home = 0x24,
+        Home = 71,
         /// <summary></summary>
-        Left = 0x25,
+        Left = 75,
         /// <summary></summary>
-        Up = 0x26,
+        Up = 72,
         /// <summary></summary>
-        Right = 0x27,
+        Right = 77,
         /// <summary></summary>
-        Down = 0x28,
+        Down = 80,
         /// <summary></summary>
-        Select = 0x29,
+        Select = 0,
         /// <summary></summary>
-        Print = 0x2A,
+        Print = 0,
         /// <summary></summary>
-        Execute = 0x2B,
+        Execute = 0,
         /// <summary></summary>
-        Snapshot = 0x2C,
+        Snapshot = 84,
         /// <summary></summary>
-        Insert = 0x2D,
+        Insert = 82,
         /// <summary></summary>
-        Delete = 0x2E,
+        Delete = 83,
         /// <summary></summary>
-        Help = 0x2F,
+        Help = 99,
         /// <summary></summary>
-        N0 = 0x30,
+        N0 = 11,
         /// <summary></summary>
-        N1 = 0x31,
+        N1 = 2,
         /// <summary></summary>
-        N2 = 0x32,
+        N2 = 3,
         /// <summary></summary>
-        N3 = 0x33,
+        N3 = 4,
         /// <summary></summary>
-        N4 = 0x34,
+        N4 = 5,
         /// <summary></summary>
-        N5 = 0x35,
+        N5 = 6,
         /// <summary></summary>
-        N6 = 0x36,
+        N6 = 7,
         /// <summary></summary>
-        N7 = 0x37,
+        N7 = 8,
         /// <summary></summary>
-        N8 = 0x38,
+        N8 = 9,
         /// <summary></summary>
-        N9 = 0x39,
+        N9 = 10,
         /// <summary></summary>
-        A = 0x41,
+        A = 30,
         /// <summary></summary>
-        B = 0x42,
+        B = 48,
         /// <summary></summary>
-        C = 0x43,
+        C = 46,
         /// <summary></summary>
-        D = 0x44,
+        D = 32,
         /// <summary></summary>
-        E = 0x45,
+        E = 18,
         /// <summary></summary>
-        F = 0x46,
+        F = 33,
         /// <summary></summary>
-        G = 0x47,
+        G = 34,
         /// <summary></summary>
-        H = 0x48,
+        H = 35,
         /// <summary></summary>
-        I = 0x49,
+        I = 23,
         /// <summary></summary>
-        J = 0x4A,
+        J = 36,
         /// <summary></summary>
-        K = 0x4B,
+        K = 37,
         /// <summary></summary>
-        L = 0x4C,
+        L = 38,
         /// <summary></summary>
-        M = 0x4D,
+        M = 50,
         /// <summary></summary>
-        N = 0x4E,
+        N = 49,
         /// <summary></summary>
-        O = 0x4F,
+        O = 24,
         /// <summary></summary>
-        P = 0x50,
+        P = 25,
         /// <summary></summary>
-        Q = 0x51,
+        Q = 16,
         /// <summary></summary>
-        R = 0x52,
+        R = 19,
         /// <summary></summary>
-        S = 0x53,
+        S = 31,
         /// <summary></summary>
-        T = 0x54,
+        T = 20,
         /// <summary></summary>
-        U = 0x55,
+        U = 22,
         /// <summary></summary>
-        V = 0x56,
+        V = 17,
         /// <summary></summary>
-        W = 0x57,
+        W = 47,
         /// <summary></summary>
-        X = 0x58,
+        X = 45,
         /// <summary></summary>
-        Y = 0x59,
+        Y = 21,
         /// <summary></summary>
-        Z = 0x5A,
+        Z = 44,
         /// <summary></summary>
-        LeftWindows = 0x5B,
+        LeftWindows = 91,
         /// <summary></summary>
-        RightWindows = 0x5C,
+        RightWindows = 92,
         /// <summary></summary>
-        Application = 0x5D,
+        Application = 93,
         /// <summary></summary>
-        Sleep = 0x5F,
+        Sleep = 95,
         /// <summary></summary>
-        Numpad0 = 0x60,
+        Numpad0 = 82,
         /// <summary></summary>
-        Numpad1 = 0x61,
+        Numpad1 = 79,
         /// <summary></summary>
-        Numpad2 = 0x62,
+        Numpad2 = 80,
         /// <summary></summary>
-        Numpad3 = 0x63,
+        Numpad3 = 81,
         /// <summary></summary>
-        Numpad4 = 0x64,
+        Numpad4 = 75,
         /// <summary></summary>
-        Numpad5 = 0x65,
+        Numpad5 = 76,
         /// <summary></summary>
-        Numpad6 = 0x66,
+        Numpad6 = 77,
         /// <summary></summary>
-        Numpad7 = 0x67,
+        Numpad7 = 71,
         /// <summary></summary>
-        Numpad8 = 0x68,
+        Numpad8 = 72,
         /// <summary></summary>
-        Numpad9 = 0x69,
+        Numpad9 = 73,
         /// <summary></summary>
-        Multiply = 0x6A,
+        Multiply = 55,
         /// <summary></summary>
-        Add = 0x6B,
+        Add = 78,
         /// <summary></summary>
-        Separator = 0x6C,
+        Separator = 0,
         /// <summary></summary>
-        Subtract = 0x6D,
+        Subtract = 74,
         /// <summary></summary>
-        Decimal = 0x6E,
+        Decimal = 83,
         /// <summary></summary>
-        Divide = 0x6F,
+        Divide = 53,
         /// <summary></summary>
-        F1 = 0x70,
+        F1 = 59,
         /// <summary></summary>
-        F2 = 0x71,
+        F2 = 60,
         /// <summary></summary>
-        F3 = 0x72,
+        F3 = 61,
         /// <summary></summary>
-        F4 = 0x73,
+        F4 = 62,
         /// <summary></summary>
-        F5 = 0x74,
+        F5 = 63,
         /// <summary></summary>
-        F6 = 0x75,
+        F6 = 64,
         /// <summary></summary>
-        F7 = 0x76,
+        F7 = 65,
         /// <summary></summary>
-        F8 = 0x77,
+        F8 = 66,
         /// <summary></summary>
-        F9 = 0x78,
+        F9 = 67,
         /// <summary></summary>
-        F10 = 0x79,
+        F10 = 68,
         /// <summary></summary>
-        F11 = 0x7A,
+        F11 = 87,
         /// <summary></summary>
-        F12 = 0x7B,
+        F12 = 88,
         /// <summary></summary>
-        F13 = 0x7C,
+        F13 = 100,
         /// <summary></summary>
-        F14 = 0x7D,
+        F14 = 101,
         /// <summary></summary>
-        F15 = 0x7E,
+        F15 = 102,
         /// <summary></summary>
-        F16 = 0x7F,
+        F16 = 103,
         /// <summary></summary>
-        F17 = 0x80,
+        F17 = 104,
         /// <summary></summary>
-        F18 = 0x81,
+        F18 = 105,
         /// <summary></summary>
-        F19 = 0x82,
+        F19 = 106,
         /// <summary></summary>
-        F20 = 0x83,
+        F20 = 107,
         /// <summary></summary>
-        F21 = 0x84,
+        F21 = 108,
         /// <summary></summary>
-        F22 = 0x85,
+        F22 = 109,
         /// <summary></summary>
-        F23 = 0x86,
+        F23 = 110,
         /// <summary></summary>
-        F24 = 0x87,
+        F24 = 118,
         /// <summary></summary>
-        NumLock = 0x90,
+        NumLock = 69,
         /// <summary></summary>
-        ScrollLock = 0x91,
+        ScrollLock = 70,
         /// <summary></summary>
-        NEC_Equal = 0x92,
+        NEC_Equal = 0,
         /// <summary></summary>
-        Fujitsu_Jisho = 0x92,
+        Fujitsu_Jisho = 0,
         /// <summary></summary>
-        Fujitsu_Masshou = 0x93,
+        Fujitsu_Masshou = 0,
         /// <summary></summary>
-        Fujitsu_Touroku = 0x94,
+        Fujitsu_Touroku = 0,
         /// <summary></summary>
-        Fujitsu_Loya = 0x95,
+        Fujitsu_Loya = 0,
         /// <summary></summary>
-        Fujitsu_Roya = 0x96,
+        Fujitsu_Roya = 0,
         /// <summary></summary>
-        LeftShift = 0xA0,
+        LeftShift = 42,
         /// <summary></summary>
-        RightShift = 0xA1,
+        RightShift = 54,
         /// <summary></summary>
-        LeftControl = 0xA2,
+        LeftControl = 29,
         /// <summary></summary>
-        RightControl = 0xA3,
+        RightControl = 29,
         /// <summary></summary>
-        LeftMenu = 0xA4,
+        LeftMenu = 56,
         /// <summary></summary>
-        RightMenu = 0xA5,
+        RightMenu = 56,
         /// <summary></summary>
-        BrowserBack = 0xA6,
+        BrowserBack = 106,
         /// <summary></summary>
-        BrowserForward = 0xA7,
+        BrowserForward = 105,
         /// <summary></summary>
-        BrowserRefresh = 0xA8,
+        BrowserRefresh = 103,
         /// <summary></summary>
-        BrowserStop = 0xA9,
+        BrowserStop = 104,
         /// <summary></summary>
-        BrowserSearch = 0xAA,
+        BrowserSearch = 101,
         /// <summary></summary>
-        BrowserFavorites = 0xAB,
+        BrowserFavorites = 102,
         /// <summary></summary>
-        BrowserHome = 0xAC,
+        BrowserHome = 50,
         /// <summary></summary>
-        VolumeMute = 0xAD,
+        VolumeMute = 32,
         /// <summary></summary>
-        VolumeDown = 0xAE,
+        VolumeDown = 46,
         /// <summary></summary>
-        VolumeUp = 0xAF,
+        VolumeUp = 48,
         /// <summary></summary>
-        MediaNextTrack = 0xB0,
+        MediaNextTrack = 25,
         /// <summary></summary>
-        MediaPrevTrack = 0xB1,
+        MediaPrevTrack = 16,
         /// <summary></summary>
-        MediaStop = 0xB2,
+        MediaStop = 36,
         /// <summary></summary>
-        MediaPlayPause = 0xB3,
+        MediaPlayPause = 34,
         /// <summary></summary>
-        LaunchMail = 0xB4,
+        LaunchMail = 108,
         /// <summary></summary>
-        LaunchMediaSelect = 0xB5,
+        LaunchMediaSelect = 109,
         /// <summary></summary>
-        LaunchApplication1 = 0xB6,
+        LaunchApplication1 = 107,
         /// <summary></summary>
-        LaunchApplication2 = 0xB7,
+        LaunchApplication2 = 33,
         /// <summary></summary>
-        OEM1 = 0xBA,
+        OEM1 = 39,
         /// <summary></summary>
-        OEMPlus = 0xBB,
+        OEMPlus = 13,
         /// <summary></summary>
-        OEMComma = 0xBC,
+        OEMComma = 51,
         /// <summary></summary>
-        OEMMinus = 0xBD,
+        OEMMinus = 12,
         /// <summary></summary>
-        OEMPeriod = 0xBE,
+        OEMPeriod = 52,
         /// <summary></summary>
-        OEM2 = 0xBF,
+        OEM2 = 53,
         /// <summary></summary>
-        OEM3 = 0xC0,
+        OEM3 = 41,
         /// <summary></summary>
-        OEM4 = 0xDB,
+        OEM4 = 26,
         /// <summary></summary>
-        OEM5 = 0xDC,
+        OEM5 = 43,
         /// <summary></summary>
-        OEM6 = 0xDD,
+        OEM6 = 27,
         /// <summary></summary>
-        OEM7 = 0xDE,
+        OEM7 = 40,
         /// <summary></summary>
-        OEM8 = 0xDF,
+        OEM8 = 0,
         /// <summary></summary>
-        OEMAX = 0xE1,
+        OEMAX = 0,
         /// <summary></summary>
-        OEM102 = 0xE2,
+        OEM102 = 86,
         /// <summary></summary>
-        ICOHelp = 0xE3,
+        ICOHelp = 0,
         /// <summary></summary>
-        ICO00 = 0xE4,
+        ICO00 = 0,
         /// <summary></summary>
-        ProcessKey = 0xE5,
+        ProcessKey = 0,
         /// <summary></summary>
-        ICOClear = 0xE6,
+        ICOClear = 0,
         /// <summary></summary>
-        Packet = 0xE7,
+        Packet = 0,
         /// <summary></summary>
-        OEMReset = 0xE9,
+        OEMReset = 0,
         /// <summary></summary>
-        OEMJump = 0xEA,
+        OEMJump = 0,
         /// <summary></summary>
-        OEMPA1 = 0xEB,
+        OEMPA1 = 0,
         /// <summary></summary>
-        OEMPA2 = 0xEC,
+        OEMPA2 = 0,
         /// <summary></summary>
-        OEMPA3 = 0xED,
+        OEMPA3 = 0,
         /// <summary></summary>
-        OEMWSCtrl = 0xEE,
+        OEMWSCtrl = 0,
         /// <summary></summary>
-        OEMCUSel = 0xEF,
+        OEMCUSel = 0,
         /// <summary></summary>
-        OEMATTN = 0xF0,
+        OEMATTN = 0,
         /// <summary></summary>
-        OEMFinish = 0xF1,
+        OEMFinish = 0,
         /// <summary></summary>
-        OEMCopy = 0xF2,
+        OEMCopy = 0,
         /// <summary></summary>
-        OEMAuto = 0xF3,
+        OEMAuto = 0,
         /// <summary></summary>
-        OEMENLW = 0xF4,
+        OEMENLW = 0,
         /// <summary></summary>
-        OEMBackTab = 0xF5,
+        OEMBackTab = 0,
         /// <summary></summary>
-        ATTN = 0xF6,
+        ATTN = 0,
         /// <summary></summary>
-        CRSel = 0xF7,
+        CRSel = 0,
         /// <summary></summary>
-        EXSel = 0xF8,
+        EXSel = 0,
         /// <summary></summary>
-        EREOF = 0xF9,
+        EREOF = 93,
         /// <summary></summary>
-        Play = 0xFA,
+        Play = 0,
         /// <summary></summary>
-        Zoom = 0xFB,
+        Zoom = 98,
         /// <summary></summary>
-        Noname = 0xFC,
+        Noname = 0,
         /// <summary></summary>
-        PA1 = 0xFD,
+        PA1 = 0,
         /// <summary></summary>
-        OEMClear = 0xFE
+        OEMClear = 0
     }
 }
