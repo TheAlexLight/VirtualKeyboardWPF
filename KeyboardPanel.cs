@@ -89,8 +89,16 @@ namespace KeyboardPanelLibrary
         {
             foreach (UIElement child in InternalChildren)
             {
-                var ch = child as ButtonBase;
-                ch.Content = GetCharsFromKeys((VirtualKeyCode)ch.Tag, false, false);
+                if (child is ButtonBase)
+                {
+                    var button = child as ButtonBase;
+                    ushort virtualKey = AttachedProperty.GetVirtualKeyCodeProperty(button);
+                    if (virtualKey != 0)
+                    {
+                        button.Content = GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false);
+                    }
+                }
+                //ch.Content = GetCharsFromKeys((VirtualKeyCode)ch.Tag, false, false);
                 child.Measure(availableSize);
             }
 
@@ -149,8 +157,9 @@ namespace KeyboardPanelLibrary
         private void VirtualKeyPress(object sender, RoutedEventArgs e)
         {
             var button = (ButtonBase)sender;
-            uint tag = UInt32.Parse(button.Tag.ToString());
-            int scanCode =  WinApi.MapVirtualKey(tag, MAPVK_VK_TO_VSC);
+            ushort virtualKey = AttachedProperty.GetVirtualKeyCodeProperty(button);
+
+            int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
             Send((ushort)scanCode);
         }
 

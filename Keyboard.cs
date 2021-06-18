@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KeyboardPanelLibrary.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,72 +19,76 @@ namespace KeyboardPanelLibrary
 
             KeysInRow = 15;
 
-            Width = (keyWidth + margin.Left + margin.Right) * KeysInRow;
+            FullWidth = (keyWidth + margin.Left + margin.Right) * KeysInRow;
 
             FillKeyList(keyWidth,keyHeight, margin);
         }
 
-        public override double Width { get; set; }
+        public override double FullWidth { get; set; }
         public override List<UIElement> KeyList { get; set; }
         public override int KeysInRow { get; set; }
 
         private void FillKeyList(double keyWidth, double keyHeight, Thickness margin)
         {
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.Tab, Width = (keyWidth + margin.Left + margin.Right) * 2 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false});
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.Q, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.W, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.E, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.R, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.T, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.Y, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.U, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.I, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.O, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.P, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.OEM4, Width = keyWidth, Height = keyHeight, Focusable = false }); //[
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.OEM6, Width = keyWidth, Height = keyHeight, Focusable = false }); //]
-            KeyList.Add(new RepeatButton() {Tag = (ushort)VirtualKeyCode.Back, Width = (keyWidth + margin.Left + margin.Right) * 2 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false }); //Backspace
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Tab, 2));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Q, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.W, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.E, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.R, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.T, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Y, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.U, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.I, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.O, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.P, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM4, 1)); //[
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM6, 1)); //]
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Back, 2)); //Backspace 
 
-            KeyList.Add(new ToggleButton() { Tag = (ushort)VirtualKeyCode.CapsLock, Width = (keyWidth + margin.Left + margin.Right) * 2.5 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.A, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.S, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.D, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.F, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.G, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.H, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.J, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.K, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.L, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEM1, Width = keyWidth, Height = keyHeight, Focusable = false }); //;
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEM7, Width = keyWidth, Height = keyHeight, Focusable = false }); //'
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.Return, Width = (keyWidth + margin.Left + margin.Right) * 2.5 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false }); //Enter
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.A, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.S, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.D, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.F, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.G, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.H, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.J, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.K, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.L, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM1, 1)); //;
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM7, 1)); //'
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Return, 5)); //Enter
 
-            KeyList.Add(new ToggleButton() { Tag = (ushort)VirtualKeyCode.Shift, Width = (keyWidth + margin.Left + margin.Right) * 3 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.Z, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.X, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.C, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.V, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.B, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.N, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.M, Width = keyWidth, Height = keyHeight, Focusable = false });
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEMComma, Width = keyWidth, Height = keyHeight, Focusable = false }); //,
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEMPeriod, Width = keyWidth, Height = keyHeight, Focusable = false }); //.
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEM2, Width = keyWidth, Height = keyHeight, Focusable = false }); //?
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.OEM5, Width = keyWidth, Height = keyHeight, Focusable = false }); //\
-            KeyList.Add(new Button() { Tag = (ushort)VirtualKeyCode.A, Content = "Lang", Width = (keyWidth + margin.Left + margin.Right) * 2 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false });  //Change language
+            KeyList.Add(SetOneKey(new ToggleButton(), keyWidth, keyHeight, VirtualKeyCode.Shift, 3));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Z, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.X, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.C, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.V, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.B, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.N, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.M, 1));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEMComma, 1)); //,
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEMPeriod, 1)); //.
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM2, 1)); //?
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.OEM5, 1)); //\
+            KeyList.Add(SetOneKey(new Button() {Content = "Lang"}, keyWidth, keyHeight, 0, 1)); //Change language
+           
+            KeyList.Add(SetOneKey(new Button() {Content = "Symb"}, keyWidth, keyHeight, 0, 2)); //Change to numbers
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Space, 12));
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Left, 1)); //Left arrow
+            KeyList.Add(SetOneKey(new RepeatButton(), keyWidth, keyHeight, VirtualKeyCode.Right, 1)); //Right arrow
+        }
 
-            KeyList.Add(new Button() { Tag = (ushort)VirtualKeyCode.A, Content = "Symb", Width = (keyWidth + margin.Left + margin.Right) * 2 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false });  //Change to numbers
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.Space, Width = (keyWidth + margin.Left + margin.Right) * 12 - margin.Left - margin.Right
-                    , Height = keyHeight, Focusable = false }); //.
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.Left, Width = keyWidth, Height = keyHeight, Focusable = false }); //Left arrow
-            KeyList.Add(new RepeatButton() { Tag = (ushort)VirtualKeyCode.Right, Width = keyWidth, Height = keyHeight, Focusable = false }); //Right arrow
+        private UIElement SetOneKey(ButtonBase buttonType, double keyWidth, double keyHeight, VirtualKeyCode virtualKey, double widthCoefficient)
+        {
+
+            buttonType.Height = keyHeight;
+            buttonType.Focusable = false;
+
+            AttachedProperty.SetVirtualKeyCodeProperty(buttonType, (ushort)virtualKey);
+            AttachedProperty.SetWidthCoefficientProperty(buttonType, widthCoefficient);
+            buttonType.SetValue(WidthProperty, keyWidth * AttachedProperty.GetWidthCoefficientProperty(buttonType));
+
+            return buttonType; 
         }
     }
 }
