@@ -25,7 +25,6 @@ namespace KeyboardPanelLibrary
 
         protected override void FillKeyList()
         {
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Tab, 2));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Q, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.W, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.E, 1));
@@ -38,10 +37,11 @@ namespace KeyboardPanelLibrary
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.P, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.OEM4, 1)); //[
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.OEM6, 1)); //]
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Back, 2)); //Backspace 
+            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Back, 3)); //Backspace 
 
-            KeysInRow[0] = 14;
+            KeysInRow[0] = 13;
 
+            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Tab, 2));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.A, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.S, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.D, 1));
@@ -53,10 +53,10 @@ namespace KeyboardPanelLibrary
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.L, 1));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.OEM1, 1)); //;
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.OEM7, 1)); //'
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Return, 5)); //Enter
+            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Return, 2)); //Enter
 
 
-            KeysInRow[1] = 12;
+            KeysInRow[1] = 13;
 
             KeyList.Add(SetOneKey(new ToggleButton(), Width, Margin, VirtualKeyCode.Shift, 3));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Z, 1));
@@ -75,7 +75,7 @@ namespace KeyboardPanelLibrary
             KeysInRow[2] = 13;
 
             KeyList.Add(SetOneKey(new Button() { Content = "Symb" }, Width, Margin, 0, 2)); //Change to numbers
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Space, 12));
+            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Space, 11));
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Left, 1)); //Left arrow
             KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Right, 1)); //Right arrow
 

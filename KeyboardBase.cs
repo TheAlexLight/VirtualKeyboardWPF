@@ -73,6 +73,32 @@ namespace KeyboardPanelLibrary
 
             return allMargin;
         }
+        public virtual double CalculateAllMarginInKeyboard()
+        {
+            double maxAmount = 0;
+            int currentKey = 0;
+
+            for (int i = 0; i < KeysInRow.Length; i++)
+            {
+                double oneLineMaxCount = 0;
+                for (int j = 0; j < KeysInRow[i]; j++)
+                {
+                    Thickness baseMargin = (Thickness)this.GetValue(MarginProperty);
+                    Thickness currentKeyMargin = (Thickness)KeyList[currentKey].GetValue(MarginProperty);
+                    double widthCoefficient = GetAdditionalMetadataProperty(KeyList[currentKey]).WidthCoefficient;
+
+                    oneLineMaxCount += (baseMargin.Left + baseMargin.Right) * (widthCoefficient - 1) + currentKeyMargin.Left + currentKeyMargin.Right;
+                    currentKey++;
+                }
+
+                if (oneLineMaxCount > maxAmount)
+                {
+                    maxAmount = oneLineMaxCount;
+                }
+            }
+
+            return maxAmount;
+        }
 
         private int FindSearchedLine(int row)
         {

@@ -52,6 +52,8 @@ namespace KeyboardPanelLibrary
             MainKeyboard = new();
             Numpad = new();
 
+            allKeyboards = new KeyboardBase[2];
+
             allKeyboards[0] = MainKeyboard;
             allKeyboards[1] = Numpad;
         }
@@ -59,7 +61,7 @@ namespace KeyboardPanelLibrary
         private const int MAPVK_VK_TO_VSC = 0;
         private double oneKeyWidth = 0;
 
-        readonly KeyboardBase[] allKeyboards = new KeyboardBase[2];
+        readonly KeyboardBase[] allKeyboards;
         public Keyboard MainKeyboard;
         public Numpad Numpad;
 
@@ -67,7 +69,7 @@ namespace KeyboardPanelLibrary
         {
             Size availSize = availableSize;
 
-            double maxMarginInAllLines = FindFullMargin(allKeyboards);
+            double maxMarginInAllLines = FindFullMargin(allKeyboards) + 20;
 
             oneKeyWidth = ( availableSize.Width - maxMarginInAllLines) / CountMaxAmountOfAllKeys();
 
@@ -184,36 +186,41 @@ namespace KeyboardPanelLibrary
         {
             double currentHeightShift = 0.0;
             double currentWidthShift = 0.0;
-            double nextKeyboardWidthShift = 0.0;
 
-            int currentRow = 0;
-            int currentKeyboard = 0;
             double previousKeyboardMaxWidth = 0;
 
-            foreach (UIElement child in InternalChildren)
+            int currentKey = 0;
+
+            for (int k = 0; k < allKeyboards.Length; k++)
             {
-                double currentKeyboardMaxWidth = oneKeyWidth * allKeyboards[currentKeyboard].CountAmountOfKeysInOneRow(currentRow)
-                        + allKeyboards[currentKeyboard].CalculateAllMargin(currentRow) + previousKeyboardMaxWidth;
-
-                if ((int)(currentWidthShift + child.DesiredSize.Width) > (int)currentKeyboardMaxWidth)
+                for (int i = 0; i < allKeyboards[k].KeysInRow.Length; i++)
                 {
-                    currentRow++;
-                    currentHeightShift += child.DesiredSize.Height;
-                    currentWidthShift = nextKeyboardWidthShift;
+                    for (int j = 0; j < allKeyboards[k].KeysInRow[i]; j++)
+                    {
+                        InternalChildren[currentKey].Arrange(new Rect(new Point(currentWidthShift, currentHeightShift), InternalChildren[currentKey].DesiredSize));
+
+                        currentWidthShift += InternalChildren[currentKey].DesiredSize.Width;
+                        if ( k != allKeyboards.Length - 1 || i != allKeyboards[k].KeysInRow.Length - 1 || j != allKeyboards[k].KeysInRow[i] - 1)
+                        {
+                            currentKey++;
+                        }
+                    }
+
+                    if (i == allKeyboards[k].KeysInRow.Length - 1)
+                    {
+                        double currentKeyboardMaxWidth = oneKeyWidth * allKeyboards[k].CountMaxAmountOfKeys()
+                        + allKeyboards[k].CalculateAllMarginInKeyboard();
+
+                        previousKeyboardMaxWidth += currentKeyboardMaxWidth + 20;
+                        
+                    }
+
+                    currentWidthShift = previousKeyboardMaxWidth;
+
+                    currentHeightShift += InternalChildren[currentKey].DesiredSize.Height;
                 }
 
-                child.Arrange(new Rect(new Point(currentWidthShift, currentHeightShift), child.DesiredSize));
-
-                if ((int)(currentWidthShift + child.DesiredSize.Width) == (int)currentKeyboardMaxWidth && currentRow == allKeyboards[currentKeyboard].KeysInRow.Length - 1)
-                {
-                    currentKeyboard++;
-                    currentRow = 0;
-                    previousKeyboardMaxWidth = currentKeyboardMaxWidth;
-                    nextKeyboardWidthShift = currentWidthShift + child.DesiredSize.Width;
-                    currentHeightShift = 0;
-                }
-
-                currentWidthShift += child.DesiredSize.Width;
+                currentHeightShift = 0;
             }
         }
 
