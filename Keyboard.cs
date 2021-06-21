@@ -87,22 +87,22 @@ namespace KeyboardPanelLibrary
             }
         }
 
-        private UIElement SetOneKey(ButtonBase buttonType, double keyWidth, Thickness margin, VirtualKeyCode virtualKey, double widthCoefficient)
-        {
+        //private UIElement SetOneKey(ButtonBase buttonType, double keyWidth, Thickness margin, VirtualKeyCode virtualKey, double widthCoefficient)
+        //{
 
-            buttonType.Margin = margin;
-            buttonType.Focusable = false;
+        //    buttonType.Margin = margin;
+        //    buttonType.Focusable = false;
 
-            KeyboardAdditionalMetadata additionalMetadata = new();
-            additionalMetadata.VirtualCode = (ushort)virtualKey;
-            additionalMetadata.WidthCoefficient = widthCoefficient;
+        //    KeyboardAdditionalMetadata additionalMetadata = new();
+        //    additionalMetadata.VirtualCode = (ushort)virtualKey;
+        //    additionalMetadata.WidthCoefficient = widthCoefficient;
 
-            SetAdditionalMetadataProperty(buttonType, additionalMetadata);
+        //    SetAdditionalMetadataProperty(buttonType, additionalMetadata);
 
-            buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
+        //    buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
 
-            return buttonType;
-        }
+        //    return buttonType;
+        //}
 
     }
 }

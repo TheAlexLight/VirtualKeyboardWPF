@@ -14,9 +14,9 @@ namespace KeyboardPanelLibrary
     {
         static KeyboardBase()
         {
-            MarginProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(new Thickness(2)));
-            HeightProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(60.0));
-            WidthProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(60.0));
+            MarginProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new Thickness(2)));
+            HeightProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
+            WidthProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
         }
 
         public virtual List<UIElement> KeyList { get; set; }
