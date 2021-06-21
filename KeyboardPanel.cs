@@ -50,13 +50,13 @@ namespace KeyboardPanelLibrary
                     , new PropertyMetadata(60.0));
            KeyHeightProperty = DependencyProperty.Register(nameof(KeyHeight), typeof(double), typeof(KeyboardPanel)
                     , new PropertyMetadata(60.0));
-            KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(KeyboardPanel)
-                    , new PropertyMetadata(new Thickness(2.0)));
+            //KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(KeyboardPanel)
+            //        , new PropertyMetadata(new Thickness(2.0)));
         }
 
         public KeyboardPanel()
         {
-            MainKeyboard = new(KeyWidth, KeyHeight, KeyMargin);
+            mainKeyboard = new(KeyWidth, KeyHeight);
         }
 
         public static readonly DependencyProperty KeyWidthProperty;
@@ -64,8 +64,9 @@ namespace KeyboardPanelLibrary
         public static readonly DependencyProperty KeyMarginProperty;
 
         private const int MAPVK_VK_TO_VSC = 0;
+        private double oneKeyWidth = 0;
 
-        public Keyboard MainKeyboard { get; set; }
+        public Keyboard mainKeyboard;
 
         public double KeyWidth
         {
@@ -79,14 +80,49 @@ namespace KeyboardPanelLibrary
             set => SetValue(KeyHeightProperty, value);
         }
 
-        public Thickness KeyMargin
-        {
-            get => (Thickness)GetValue(KeyMarginProperty);
-            set => SetValue(KeyMarginProperty, value);
-        }
+        //public Thickness KeyMargin
+        //{
+        //    get => (Thickness)GetValue(KeyMarginProperty);
+        //    set => SetValue(KeyMarginProperty, value);
+        //}
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            Size availSize = availableSize;
+
+            double maxMarginInAllLines = 0;
+
+            for (int i = 0; i < 4; i++)
+            {
+                double maxMarginInOneLine = mainKeyboard.CalculateAllMargin(i);
+
+                if (maxMarginInOneLine > maxMarginInAllLines)
+                {
+                    maxMarginInAllLines = maxMarginInOneLine;
+                }  
+            }
+
+            
+
+            oneKeyWidth = ( availableSize.Width - maxMarginInAllLines) / mainKeyboard.CountMaxAmountOfKeys() /*mainKeyboard.MaxAmountOfKeys*/;
+            // oneKeyWidth = (mainKeyboard.FullWidth + maxMarginInAllLines) / mainKeyboard.MaxAmountOfKeys;
+
+            Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
+
+            if (Application.Current.MainWindow.Width < 30 * mainKeyboard.MaxAmountOfKeys + maxMarginInAllLines)
+            {
+                oneKeyWidth = 30;
+                double minAvailSize = 30 * mainKeyboard.MaxAmountOfKeys + maxMarginInAllLines;
+                availSize.Width = minAvailSize;
+                Application.Current.MainWindow.MinWidth = minAvailSize;
+            }
+
+            foreach (UIElement child in InternalChildren)
+            {
+                var widthCoefficient = KeyboardBase.GetAdditionalMetadataProperty(child).WidthCoefficient;
+                child.SetValue(WidthProperty, oneKeyWidth * widthCoefficient + (mainKeyboard.Margin.Left + mainKeyboard.Margin.Right) * (widthCoefficient - 1));
+            }
+
             foreach (UIElement child in InternalChildren)
             {
                 if (child is ButtonBase)
@@ -107,31 +143,36 @@ namespace KeyboardPanelLibrary
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double currentHeight = 0.0;
-            double currentWidth = 0.0;
-            double maxWidth = (KeyWidth + KeyMargin.Left + KeyMargin.Right) * 16;
+            double currentHeightShift = 0.0;
+            double currentWidthShift = 0.0;
+            // double maxWidth = (KeyWidth + KeyMargin.Left + KeyMargin.Right) * 16;
+
+            int currentRow = 0;
 
             foreach (UIElement child in InternalChildren)
             {
-                if (currentWidth + child.DesiredSize.Width > maxWidth)
+                if ((int)(currentWidthShift + child.DesiredSize.Width) > oneKeyWidth * mainKeyboard.CountAmountOfKeysInOneRow(currentRow) /*mainKeyboard.CountMaxAmountOfKeys()*/ + mainKeyboard.CalculateAllMargin(currentRow))
                 {
-                    currentWidth = 0;
-                    currentHeight += child.DesiredSize.Height;
+                    currentWidthShift = 0;
+                    currentHeightShift += child.DesiredSize.Height;
+                    currentRow++;
                 }
 
-                child.Arrange(new Rect(new Point(currentWidth, currentHeight), child.DesiredSize));
+                child.Arrange(new Rect(new Point(currentWidthShift, currentHeightShift), child.DesiredSize));
 
-                currentWidth += child.DesiredSize.Width;
+                currentWidthShift += child.DesiredSize.Width;
             }
 
             return base.ArrangeOverride(finalSize);
         }
 
+
+
         protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
         {
             if (visualAdded != null)
             {
-                visualAdded.SetValue(MarginProperty, KeyMargin);
+                //visualAdded.SetValue(MarginProperty, KeyMargin);
 
                 if (visualAdded is ButtonBase)
                 {

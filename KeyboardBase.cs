@@ -10,9 +10,9 @@ namespace KeyboardPanelLibrary
 {
     public abstract class KeyboardBase: Control
     {
-        public abstract double FullWidth { get; set; }
+        public abstract double FullWidth { get;}
         public abstract List<UIElement> KeyList { get; set; }
-        public abstract int KeysInRow { get; set; }
+        public abstract int[] KeysInRow { get; set; }
 
         public static readonly DependencyProperty AdditionalMetadataProperty
         = DependencyProperty.RegisterAttached("SetAdditionalMetadata", typeof(KeyboardAdditionalMetadata), typeof(KeyboardBase), new PropertyMetadata());

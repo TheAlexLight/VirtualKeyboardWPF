@@ -18,7 +18,7 @@ namespace KeyboardPanelLibrary.Extensions
         [DllImport("user32.dll")]
         internal static extern uint SendInput(
             uint nInputs,
-            [MarshalAs(UnmanagedType.LPArray), In] INPUT[] pInputs,
+           /* [MarshalAs(UnmanagedType.LPArray), In]*/ INPUT[] pInputs,
             int cbSize);
 
         // Declare the INPUT struct
@@ -90,7 +90,7 @@ namespace KeyboardPanelLibrary.Extensions
             internal VirtualKeyCode wVk;
             internal ushort wScan;
             internal KEYEVENTF dwFlags;
-            internal int time;
+            internal uint time;
             internal UIntPtr dwExtraInfo;
         }
 

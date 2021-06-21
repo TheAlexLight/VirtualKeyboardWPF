@@ -14,3 +14,4 @@ E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibr
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\ref\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.pdb
+E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\Themes\Keyboard.baml
