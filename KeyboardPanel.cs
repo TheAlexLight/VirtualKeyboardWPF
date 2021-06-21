@@ -45,46 +45,17 @@ namespace KeyboardPanelLibrary
         static KeyboardPanel()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
-
-            KeyWidthProperty = DependencyProperty.Register(nameof(KeyWidth), typeof(double), typeof(KeyboardPanel)
-                    , new PropertyMetadata(60.0));
-           KeyHeightProperty = DependencyProperty.Register(nameof(KeyHeight), typeof(double), typeof(KeyboardPanel)
-                    , new PropertyMetadata(60.0));
-            //KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(KeyboardPanel)
-            //        , new PropertyMetadata(new Thickness(2.0)));
         }
 
         public KeyboardPanel()
         {
-            mainKeyboard = new(KeyWidth, KeyHeight);
+            mainKeyboard = new();
         }
-
-        public static readonly DependencyProperty KeyWidthProperty;
-        public static readonly DependencyProperty KeyHeightProperty;
-        public static readonly DependencyProperty KeyMarginProperty;
 
         private const int MAPVK_VK_TO_VSC = 0;
         private double oneKeyWidth = 0;
 
         public Keyboard mainKeyboard;
-
-        public double KeyWidth
-        {
-            get => (double)base.GetValue(KeyWidthProperty);
-            set => SetValue(KeyWidthProperty, value);
-        }
-
-        public double KeyHeight
-        {
-            get => (double)GetValue(KeyHeightProperty);
-            set => SetValue(KeyHeightProperty, value);
-        }
-
-        //public Thickness KeyMargin
-        //{
-        //    get => (Thickness)GetValue(KeyMarginProperty);
-        //    set => SetValue(KeyMarginProperty, value);
-        //}
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -107,7 +78,7 @@ namespace KeyboardPanelLibrary
             oneKeyWidth = ( availableSize.Width - maxMarginInAllLines) / mainKeyboard.CountMaxAmountOfKeys() /*mainKeyboard.MaxAmountOfKeys*/;
             // oneKeyWidth = (mainKeyboard.FullWidth + maxMarginInAllLines) / mainKeyboard.MaxAmountOfKeys;
 
-            Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
+            //Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
 
             if (Application.Current.MainWindow.Width < 30 * mainKeyboard.MaxAmountOfKeys + maxMarginInAllLines)
             {
