@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 using VirtualKeyboardWPF.Enums;
 
 namespace KeyboardPanelLibrary
@@ -17,6 +18,9 @@ namespace KeyboardPanelLibrary
             MarginProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new Thickness(2)));
             HeightProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
             WidthProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
+            BackgroundProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
+            ForegroundProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White)));
+            FontSizeProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(16.0));
         }
 
         public virtual List<UIElement> KeyList { get; set; }
@@ -38,9 +42,8 @@ namespace KeyboardPanelLibrary
 
         protected abstract void FillKeyList();
 
-        protected virtual UIElement SetOneKey(ButtonBase buttonType, double keyWidth, Thickness margin, VirtualKeyCode virtualKey, double widthCoefficient)
+        protected virtual UIElement SetOneKey(UIElement buttonType, double keyWidth, VirtualKeyCode virtualKey, double widthCoefficient)
         {
-            buttonType.Margin = margin;
             buttonType.Focusable = false;
 
             KeyboardAdditionalMetadata additionalMetadata = new();

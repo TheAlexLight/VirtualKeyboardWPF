@@ -1,4 +1,6 @@
-﻿using KeyboardPanelLibrary.Extensions;
+﻿using KeyboardPanelLibrary.Enums;
+using KeyboardPanelLibrary.Extensions;
+using KeyboardPanelLibrary.Extensions.Structs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -84,10 +86,23 @@ namespace KeyboardPanelLibrary
                 {
                     var button = child as ButtonBase;
                     ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
-                    if (virtualKey != 0)
+
+                    string content = "";
+
+                    content = virtualKey switch
                     {
-                        button.Content = GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false);
-                    }
+                        0x00 => button.Content.ToString(),
+                        (ushort)VirtualKeyCode.Tab => "Tab",
+                        (ushort)VirtualKeyCode.Shift => "Shift",
+                        (ushort)VirtualKeyCode.Back => "Backspace",
+                        (ushort)VirtualKeyCode.Return => "Enter",
+                        (ushort)VirtualKeyCode.Space => "Space",
+                        (ushort)VirtualKeyCode.Left => "<",
+                        (ushort)VirtualKeyCode.Right => ">",
+                        _ => GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false),
+                    };
+
+                    button.Content = content;
                 }
 
                 child.Measure(availableSize);
@@ -240,13 +255,13 @@ namespace KeyboardPanelLibrary
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         }
 
-        public void Send(ushort scan)
+        public void Send(VirtualKeyCode virtualKey)
         {
             INPUT[] Inputs = new INPUT[1];
             INPUT Input = new INPUT();
             Input.type = 1; // 1 = Keyboard Input
-            Input.U.ki.wScan = scan;
-            Input.U.ki.dwFlags = KEYEVENTF.SCANCODE;
+            Input.inputUinion.ki.wVk = virtualKey;
+            Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
             Inputs[0] = Input;
             SendInput(1, Inputs, INPUT.Size);
         }
@@ -256,8 +271,8 @@ namespace KeyboardPanelLibrary
             var button = (ButtonBase)sender;
             ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
 
-            int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
-            Send((ushort)scanCode);
+           // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
+            Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
         }
 
         static string GetCharsFromKeys(VirtualKeyCode keys, bool shift, bool altGr)

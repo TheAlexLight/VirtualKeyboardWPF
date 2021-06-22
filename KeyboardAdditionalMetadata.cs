@@ -10,5 +10,6 @@ namespace KeyboardPanelLibrary
     {
         public ushort VirtualCode { get; set; }
         public double WidthCoefficient { get; set; }
+        public int CustomKeyCode { get; set; }
     }
 }

@@ -22,26 +22,26 @@ namespace KeyboardPanelLibrary
 
         protected override void FillKeyList()
         {
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad7, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad8, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad9, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad7, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad8, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad9, 1));
 
             KeysInRow[0] = 3;
 
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad4, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad5, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad6, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad4, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad5, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad6, 1));
 
             KeysInRow[1] = 3;
 
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad1, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad2, 1));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad3, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad1, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad2, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad3, 1));
 
             KeysInRow[2] = 3;
 
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.Numpad0, 2));
-            KeyList.Add(SetOneKey(new RepeatButton(), Width, Margin, VirtualKeyCode.OEMPeriod, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad0, 2));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.OEMPeriod, 1));
 
             KeysInRow[3] = 2;
 
