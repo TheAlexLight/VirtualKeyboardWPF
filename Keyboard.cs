@@ -22,8 +22,6 @@ namespace KeyboardPanelLibrary
             KeyList = new();
 
             KeysInRow = new int[4];
-
-
         }
 
         public ComboBoxItem LanguageList { get; set; }
@@ -33,62 +31,59 @@ namespace KeyboardPanelLibrary
             base.OnApplyTemplate();
 
             FillKeyList();
-
-            var b = KeyBackground;
-            var a = KeyWidth;
         }
 
         protected override void FillKeyList()
         {
             Style keyStyle = Application.Current.FindResource("keyStyle") as Style;
 
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Q, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.W, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.E, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.R, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.T, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Y, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.U, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.I, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.O, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.P, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM4, 1)); //[
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM6, 1)); //]
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM5, 1)); //\
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Back, 2)); //Backspace 
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Q, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.W, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.E, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.R, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.T, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Y, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.U, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.I, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.O, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.P, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM4, 1)); //[
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM6, 1)); //]
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM5, 1)); //\
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Back, 2)); //Backspace 
 
             KeysInRow[0] = 14;
 
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Tab, 2));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.A, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.S, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.D, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.F, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.G, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.H, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.J, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.K, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.L, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM1, 1)); //;
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM7, 1)); //'
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Return, 2)); //Enter
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Tab, 2));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.A, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.S, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.D, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.F, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.G, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.H, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.J, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.K, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.L, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM1, 1)); //;
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM7, 1)); //'
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Return, 2)); //Enter
 
 
             KeysInRow[1] = 13;
 
-            KeyList.Add(SetOneKey(new ToggleButton() { Style = keyStyle }, Width, VirtualKeyCode.Shift, 3));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.Z, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.X, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.C, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.V, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.B, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.N, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.M, 1));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEMComma, 1)); //,
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEMPeriod, 1)); //.
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, Width, VirtualKeyCode.OEM2, 1)); //?
+            KeyList.Add(SetOneKey(new ToggleButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Shift, 3));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Z, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.X, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.C, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.V, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.B, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.N, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.M, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEMComma, 1)); //,
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEMPeriod, 1)); //.
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.OEM2, 1)); //?
 
-            KeyList.Add(SetOneKey(new ComboBox() { Background = KeyBackground, Foreground = Foreground, Margin = KeyMargin, FontSize = FontSize}, Width, 0, 2)); //Change language
+            KeyList.Add(SetOneKey(new ComboBox() { Background = KeyBackground, Foreground = Foreground, Margin = KeyMargin, FontSize = FontSize}, 0, 2)); //Change language
             var comboBoxStyle = Application.Current.FindResource("comboBoxStyle") as Style;
             KeyList.Last().SetValue(StyleProperty, comboBoxStyle);
             ((ComboBox)KeyList.Last()).ItemsSource = GetLocalLanguages();
@@ -98,11 +93,10 @@ namespace KeyboardPanelLibrary
 
 
 
-            KeyList.Add(SetOneKey(new Button() {Style = keyStyle, Content = "&123" }, KeyWidth, 0, 2)); //Change to numbers
-            KeyList.Last().SetValue(StyleProperty, keyStyle);
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, KeyWidth, VirtualKeyCode.Space, 11));
-            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle }, KeyWidth, VirtualKeyCode.Left, 1)); //Left arrow
-            KeyList.Add(SetOneKey(new Button() { Style = keyStyle }, KeyWidth, VirtualKeyCode.Right, 1)); //Right arrow
+            KeyList.Add(SetOneKey(new Button() {Style = keyStyle, Margin = KeyMargin, Content = "&123" }, 0, 2)); //Change to numbers
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Space, 11));
+            KeyList.Add(SetOneKey(new RepeatButton() { Style = keyStyle, Margin = KeyMargin }, VirtualKeyCode.Left, 1)); //Left arrow
+            KeyList.Add(SetOneKey(new Button() { Style = keyStyle }, VirtualKeyCode.Right, 1)); //Right arrow
     
             KeysInRow[3] = 4;
 

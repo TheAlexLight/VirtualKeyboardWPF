@@ -6,24 +6,6 @@
 
     <loc:ColorConverter x:Key="colorConv"/>
 
-    <!--<Style TargetType="{x:Type ItemsControl}">
-        <Setter Property="ItemsSource" Value="{Binding KeyList, RelativeSource={RelativeSource AncestorType=local:Keyboard} }"/>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <local:KeyboardPanel/>
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate>
-                    <Button Background="Purple" Margin="5"/>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
     <Style TargetType="{x:Type local:Keyboard}">
         <!--<Setter Property="KeyBackground" Value="{Binding KeyBackground, RelativeSource={RelativeSource AncestorType={x:Type local:Keyboard}}, Mode=TwoWay
                 , Converter={StaticResource colorConv}}"/>
@@ -149,5 +131,3 @@
     </Style>
 
 </ResourceDictionary>
-
-<!--ItemsSource="{Binding Key, RelativeSource={RelativeSource AncestorType=loc:MainWindowViewModel}}"-->

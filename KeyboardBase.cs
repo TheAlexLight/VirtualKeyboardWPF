@@ -26,8 +26,6 @@ namespace KeyboardPanelLibrary
                    , new PropertyMetadata(null));
             KeyBackgroundProperty = DependencyProperty.Register(nameof(KeyBackground), typeof(Brush), typeof(KeyboardBase)
                    , new PropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
-            KeyWidthProperty = DependencyProperty.Register(nameof(KeyWidth), typeof(double), typeof(KeyboardBase)
-                   , new PropertyMetadata(20.0));
             KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(KeyboardBase)
                    , new PropertyMetadata(new Thickness(2)));
         }
@@ -37,7 +35,6 @@ namespace KeyboardPanelLibrary
 
         public static readonly DependencyProperty KeyListProperty;
         public static readonly DependencyProperty KeyBackgroundProperty;
-        public static readonly DependencyProperty KeyWidthProperty;
         public static readonly DependencyProperty KeyMarginProperty;
 
         public static readonly DependencyProperty AdditionalMetadataProperty
@@ -65,27 +62,15 @@ namespace KeyboardPanelLibrary
             set => SetValue(KeyBackgroundProperty, value);
         }
 
-        public double KeyWidth
-        {
-            get => (double)base.GetValue(KeyWidthProperty);
-            set => SetValue(KeyWidthProperty, value);
-        }
-
         public Thickness KeyMargin
         {
             get => (Thickness)base.GetValue(KeyMarginProperty);
             set => SetValue(KeyMarginProperty, value);
         }
 
-        //private static void OnKeyWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    Keyboard keyboard = (Keyboard)d;
-        //    keyboard.KeyWidth = (double)e.NewValue;
-        //}
-
         protected abstract void FillKeyList();
 
-        protected virtual UIElement SetOneKey(UIElement buttonType, double keyWidth, VirtualKeyCode virtualKey, double widthCoefficient)
+        protected virtual UIElement SetOneKey(UIElement buttonType, VirtualKeyCode virtualKey, double widthCoefficient)
         {
             buttonType.Focusable = false;
 
@@ -94,8 +79,6 @@ namespace KeyboardPanelLibrary
             additionalMetadata.WidthCoefficient = widthCoefficient;
 
             SetAdditionalMetadataProperty(buttonType, additionalMetadata);
-
-            //buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
 
             return buttonType;
         }
