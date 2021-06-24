@@ -45,5 +45,9 @@ namespace KeyboardPanelLibrary.Extensions
 
         //[DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         //static internal extern int GetLocaleInfoEx(String lpLocaleName, LCTYPE LCType, StringBuilder lpLCData, int cchData);
+
+        [DllImport("user32.dll")]
+         static internal extern UInt32 ActivateKeyboardLayout(IntPtr hkl, UInt32 flags);
+
     }
 }

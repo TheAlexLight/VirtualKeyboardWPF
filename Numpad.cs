@@ -41,7 +41,7 @@ namespace KeyboardPanelLibrary
             KeysInRow[2] = 3;
 
             KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Numpad0, 2));
-            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.OEMPeriod, 1));
+            KeyList.Add(SetOneKey(new RepeatButton() { Background = Background, Foreground = Foreground, Margin = Margin }, Width, VirtualKeyCode.Decimal, 1));
 
             KeysInRow[3] = 2;
 

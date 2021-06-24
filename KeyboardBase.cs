@@ -16,16 +16,29 @@ namespace KeyboardPanelLibrary
         static KeyboardBase()
         {
             MarginProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new Thickness(2)));
-            HeightProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
-            WidthProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
+            //HeightProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
+            //WidthProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(60.0));
             BackgroundProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
             ForegroundProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White)));
             FontSizeProperty.OverrideMetadata(typeof(KeyboardBase), new FrameworkPropertyMetadata(16.0));
+
+            KeyListProperty = DependencyProperty.Register(nameof(KeyList), typeof(List<UIElement>), typeof(KeyboardBase)
+                   , new PropertyMetadata(null));
+            KeyBackgroundProperty = DependencyProperty.Register(nameof(KeyBackground), typeof(Brush), typeof(KeyboardBase)
+                   , new PropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
+            KeyWidthProperty = DependencyProperty.Register(nameof(KeyWidth), typeof(double), typeof(KeyboardBase)
+                   , new PropertyMetadata(20.0));
+            KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(KeyboardBase)
+                   , new PropertyMetadata(new Thickness(2)));
         }
 
-        public virtual List<UIElement> KeyList { get; set; }
         public virtual int[] KeysInRow { get; set; }
         public virtual int MaxAmountOfKeys { get => KeysInRow.Max(); }
+
+        public static readonly DependencyProperty KeyListProperty;
+        public static readonly DependencyProperty KeyBackgroundProperty;
+        public static readonly DependencyProperty KeyWidthProperty;
+        public static readonly DependencyProperty KeyMarginProperty;
 
         public static readonly DependencyProperty AdditionalMetadataProperty
         = DependencyProperty.RegisterAttached("SetAdditionalMetadata", typeof(KeyboardAdditionalMetadata), typeof(KeyboardBase), new PropertyMetadata());
@@ -40,6 +53,36 @@ namespace KeyboardPanelLibrary
             return (KeyboardAdditionalMetadata)obj.GetValue(AdditionalMetadataProperty);
         }
 
+        public List<UIElement> KeyList
+        {
+            get => (List<UIElement>)base.GetValue(KeyListProperty);
+            set => SetValue(KeyListProperty, value);
+        }
+
+        public Brush KeyBackground
+        {
+            get => (Brush)base.GetValue(KeyBackgroundProperty);
+            set => SetValue(KeyBackgroundProperty, value);
+        }
+
+        public double KeyWidth
+        {
+            get => (double)base.GetValue(KeyWidthProperty);
+            set => SetValue(KeyWidthProperty, value);
+        }
+
+        public Thickness KeyMargin
+        {
+            get => (Thickness)base.GetValue(KeyMarginProperty);
+            set => SetValue(KeyMarginProperty, value);
+        }
+
+        //private static void OnKeyWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    Keyboard keyboard = (Keyboard)d;
+        //    keyboard.KeyWidth = (double)e.NewValue;
+        //}
+
         protected abstract void FillKeyList();
 
         protected virtual UIElement SetOneKey(UIElement buttonType, double keyWidth, VirtualKeyCode virtualKey, double widthCoefficient)
@@ -52,7 +95,7 @@ namespace KeyboardPanelLibrary
 
             SetAdditionalMetadataProperty(buttonType, additionalMetadata);
 
-            buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
+            //buttonType.SetValue(WidthProperty, keyWidth * GetAdditionalMetadataProperty(buttonType).WidthCoefficient);
 
             return buttonType;
         }

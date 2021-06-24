@@ -3,6 +3,7 @@ using KeyboardPanelLibrary.Extensions;
 using KeyboardPanelLibrary.Extensions.Structs;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
@@ -51,71 +52,86 @@ namespace KeyboardPanelLibrary
 
         public KeyboardPanel()
         {
-            MainKeyboard = new();
-            Numpad = new();
+            //MainKeyboard = new();
+            //Numpad = new();
 
-            allKeyboards = new KeyboardBase[2];
+            //allKeyboards = new KeyboardBase[2];
 
-            allKeyboards[0] = MainKeyboard;
-            allKeyboards[1] = Numpad;
+            //allKeyboards[0] = MainKeyboard;
+            //allKeyboards[1] = Numpad;
         }
 
-        private const int MAPVK_VK_TO_VSC = 0;
+        //private const int MAPVK_VK_TO_VSC = 0;
+        private const UInt32 KLF_SETFORPROCESS = 0x00000100;
+        private const double SPACE_BETWEEN_KEYBOARDS = 20;
         private double oneKeyWidth = 0;
 
         readonly KeyboardBase[] allKeyboards;
-        public Keyboard MainKeyboard;
-        public Numpad Numpad;
+        //public Keyboard MainKeyboard;
+        //public Numpad Numpad;
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            Size availSize = availableSize;
+            //Size availSize = availableSize;
 
-            double maxMarginInAllLines = FindFullMargin(allKeyboards) + 20;
+            //double maxMarginInAllLines = FindFullMargin(allKeyboards) + SPACE_BETWEEN_KEYBOARDS;
 
-            oneKeyWidth = ( availableSize.Width - maxMarginInAllLines) / CountMaxAmountOfAllKeys();
+            //oneKeyWidth = (availableSize.Width - maxMarginInAllLines) / CountMaxAmountOfAllKeys();
 
-            //Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
+            //////Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
 
-            SetMinWidth(maxMarginInAllLines, availSize);
-            SetNewWidth();
+            //SetMinWidth(maxMarginInAllLines, availSize);
+            //SetNewWidth();
 
             foreach (UIElement child in InternalChildren)
             {
-                if (child is ButtonBase)
-                {
-                    var button = child as ButtonBase;
-                    ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
-
-                    string content = "";
-
-                    content = virtualKey switch
-                    {
-                        0x00 => button.Content.ToString(),
-                        (ushort)VirtualKeyCode.Tab => "Tab",
-                        (ushort)VirtualKeyCode.Shift => "Shift",
-                        (ushort)VirtualKeyCode.Back => "Backspace",
-                        (ushort)VirtualKeyCode.Return => "Enter",
-                        (ushort)VirtualKeyCode.Space => "Space",
-                        (ushort)VirtualKeyCode.Left => "<",
-                        (ushort)VirtualKeyCode.Right => ">",
-                        _ => GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false),
-                    };
-
-                    button.Content = content;
-                }
-
+                //SetButtonsContent(child);
                 child.Measure(availableSize);
             }
 
             return base.MeasureOverride(availableSize);
         }
+
         protected override Size ArrangeOverride(Size finalSize)
         {
-            ArrangeAllKeys();
+            int a = 0;
+            foreach (UIElement child in InternalChildren)
+            {
+                child.Arrange(new Rect(new Point(0,0), child.DesiredSize));
+                a += 50;
+            }
+
+            //ArrangeAllKeys();
 
             return base.ArrangeOverride(finalSize);
         }
+
+        private void SetButtonsContent(UIElement child)
+        {
+            if (child is ButtonBase)
+            {
+                var button = child as ButtonBase;
+                ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
+
+                string content = "";
+
+                content = virtualKey switch
+                {
+                    0x00 => button.Content.ToString(),
+                    (ushort)VirtualKeyCode.Tab => "Tab",
+                    (ushort)VirtualKeyCode.Shift => "Shift",
+                    (ushort)VirtualKeyCode.Back => "Backspace",
+                    (ushort)VirtualKeyCode.Return => "Enter",
+                    (ushort)VirtualKeyCode.Space => "Space",
+                    (ushort)VirtualKeyCode.Left => "<",
+                    (ushort)VirtualKeyCode.Right => ">",
+                    _ => GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false),
+                };
+
+                button.Content = content;
+            }
+        }
+
 
         private double FindFullMargin(KeyboardBase[] allKeyboards)
         {
@@ -210,9 +226,17 @@ namespace KeyboardPanelLibrary
             {
                 for (int i = 0; i < allKeyboards[k].KeysInRow.Length; i++)
                 {
+                    double shiftFromMaxWidth = 0;
+
+                    if (allKeyboards[k].CountMaxAmountOfKeys() - allKeyboards[k].CountAmountOfKeysInOneRow(i) != 0 )
+                    {
+                         shiftFromMaxWidth = (oneKeyWidth + allKeyboards[k].Margin.Left + allKeyboards[k].Margin.Right) 
+                            * (allKeyboards[k].CountMaxAmountOfKeys() - allKeyboards[k].CountAmountOfKeysInOneRow(i) ) / 2;
+                    }
+
                     for (int j = 0; j < allKeyboards[k].KeysInRow[i]; j++)
                     {
-                        InternalChildren[currentKey].Arrange(new Rect(new Point(currentWidthShift, currentHeightShift), InternalChildren[currentKey].DesiredSize));
+                        InternalChildren[currentKey].Arrange(new Rect(new Point(currentWidthShift + shiftFromMaxWidth, currentHeightShift), InternalChildren[currentKey].DesiredSize));
 
                         currentWidthShift += InternalChildren[currentKey].DesiredSize.Width;
                         if ( k != allKeyboards.Length - 1 || i != allKeyboards[k].KeysInRow.Length - 1 || j != allKeyboards[k].KeysInRow[i] - 1)
@@ -226,7 +250,7 @@ namespace KeyboardPanelLibrary
                         double currentKeyboardMaxWidth = oneKeyWidth * allKeyboards[k].CountMaxAmountOfKeys()
                         + allKeyboards[k].CalculateAllMarginInKeyboard();
 
-                        previousKeyboardMaxWidth += currentKeyboardMaxWidth + 20;
+                        previousKeyboardMaxWidth += currentKeyboardMaxWidth + SPACE_BETWEEN_KEYBOARDS;
                         
                     }
 
@@ -249,6 +273,11 @@ namespace KeyboardPanelLibrary
                 {
                     var button = visualAdded as ButtonBase;
                     button.Click += VirtualKeyPress;
+                }
+                else if(visualAdded is ComboBox)
+                {
+                    var comboBox = visualAdded as ComboBox;
+                    comboBox.SelectionChanged += ChangeLanguage;
                 }
             }
 
@@ -273,6 +302,19 @@ namespace KeyboardPanelLibrary
 
            // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
             Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
+        }
+
+        private void ChangeLanguage(object sender, RoutedEventArgs e)
+        {
+            var comboBox = (ComboBox)sender;
+            CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
+
+            WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
+
+            foreach (UIElement child in InternalChildren)
+            {
+                SetButtonsContent(child);
+            }
         }
 
         static string GetCharsFromKeys(VirtualKeyCode keys, bool shift, bool altGr)
