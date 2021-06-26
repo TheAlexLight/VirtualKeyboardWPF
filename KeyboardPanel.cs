@@ -59,51 +59,145 @@ namespace KeyboardPanelLibrary
 
             //allKeyboards[0] = MainKeyboard;
             //allKeyboards[1] = Numpad;
+
         }
 
         //private const int MAPVK_VK_TO_VSC = 0;
         private const UInt32 KLF_SETFORPROCESS = 0x00000100;
         private const double SPACE_BETWEEN_KEYBOARDS = 20;
+        private const int ROWS_COUNT = 4;
         private double oneKeyWidth = 0;
 
-        readonly KeyboardBase[] allKeyboards;
+        //readonly KeyboardBase[] allKeyboards;
         //public Keyboard MainKeyboard;
         //public Numpad Numpad;
+        readonly KeyboardHelper helper = new();
+        List<int> rowsWithKeys;
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            //Size availSize = availableSize;
+            rowsWithKeys = GetKeyList();
 
-            //double maxMarginInAllLines = FindFullMargin(allKeyboards) + SPACE_BETWEEN_KEYBOARDS;
+            Size availSize = availableSize;
 
-            //oneKeyWidth = (availableSize.Width - maxMarginInAllLines) / CountMaxAmountOfAllKeys();
+            double maxMarginInAllLines = FindFullMargin(rowsWithKeys) + SPACE_BETWEEN_KEYBOARDS * (rowsWithKeys.Count / ROWS_COUNT - 1);
+
+            oneKeyWidth = (availSize.Width - maxMarginInAllLines) / helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren);
 
             //////Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
 
-            //SetMinWidth(maxMarginInAllLines, availSize);
-            //SetNewWidth();
+            SetMinWidth(maxMarginInAllLines, availSize);
+            SetNewWidth();
+            SetNewHeight(availSize);
 
             foreach (UIElement child in InternalChildren)
             {
-                //SetButtonsContent(child);
-                child.Measure(availableSize);
+                SetButtonsContent(child);
+                child.Measure(availSize);
             }
 
-            return base.MeasureOverride(availableSize);
+            return base.MeasureOverride(availSize);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            int a = 0;
-            foreach (UIElement child in InternalChildren)
-            {
-                child.Arrange(new Rect(new Point(0,0), child.DesiredSize));
-                a += 50;
-            }
-
-            //ArrangeAllKeys();
+            ArrangeAllKeys();
 
             return base.ArrangeOverride(finalSize);
+        }
+
+        private List<int> GetKeyList()
+        {
+            List<int> rowsWithKeys = new();
+
+            //List<List<UIElement>> rowsWithKeys = new();
+            //rowsWithKeys.Add(/*List<UIElement>())*/;
+
+            int currentKeyboardLine = 1;
+            int keysInOneRow = 0;
+
+            foreach (UIElement child in InternalChildren)
+            {
+                var keyRowMetadata = KeyboardBase.GetAdditionalMetadataProperty(child).RowLocation;
+
+                if (keyRowMetadata == currentKeyboardLine + 1)
+                {
+                    rowsWithKeys.Add(keysInOneRow);
+                    keysInOneRow = 0;
+                    currentKeyboardLine++;
+                }
+
+                keysInOneRow++;
+            }
+
+            if (keysInOneRow != 0)
+            {
+                rowsWithKeys.Add(keysInOneRow);
+            }
+
+            return rowsWithKeys;
+        }
+
+        private double FindFullMargin(List<int> rowsWithKeys)
+        {
+            double allKeyboardsMargin = 0;
+            double oneKeyboardMaxMargin = 0;
+
+            int currentKey = 0;
+
+            for (int i = 0; i < rowsWithKeys.Count; i++)
+            {
+                    double maxMarginInOneLine = helper.CalculateAllMarginInOneRow(rowsWithKeys[i], 
+                            (Thickness)InternalChildren[currentKey].GetValue(MarginProperty), currentKey, InternalChildren );
+
+                    if (maxMarginInOneLine > oneKeyboardMaxMargin)
+                    {
+                        oneKeyboardMaxMargin = maxMarginInOneLine;
+                    }
+
+                    if ((i + 1) % ROWS_COUNT == 0 && i!= 0)
+                    {
+                        allKeyboardsMargin += maxMarginInOneLine;
+                        oneKeyboardMaxMargin = 0;
+                    }
+
+                currentKey += rowsWithKeys[i];
+            }
+
+            return allKeyboardsMargin;
+        }
+
+        private Size SetMinWidth( double maxMarginInAllLines, Size availableSize)
+        {
+            if (Application.Current.MainWindow.Width < 30 * helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren) + maxMarginInAllLines)
+            {
+                oneKeyWidth = 30;
+                double minAvailSize = 30 * helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren) + maxMarginInAllLines;
+                availableSize.Width = minAvailSize;
+                Application.Current.MainWindow.MinWidth = minAvailSize;
+            }
+
+            return availableSize;
+        }
+
+        private void SetNewWidth()
+        {
+            foreach (UIElement child in InternalChildren)
+            {
+                var widthCoefficient = KeyboardBase.GetAdditionalMetadataProperty(child).WidthCoefficient;
+
+                child.SetValue(WidthProperty, oneKeyWidth * widthCoefficient
+                        + (((Thickness)child.GetValue(MarginProperty)).Right + ((Thickness)child.GetValue(MarginProperty)).Left) * (widthCoefficient - 1));
+            }
+        }
+
+        private void SetNewHeight(Size availableSize)
+        {
+            foreach (UIElement child in InternalChildren)
+            {
+                child.SetValue(HeightProperty, (availableSize.Height - (((Thickness)child.GetValue(MarginProperty)).Top
+                            + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT);
+            }
         }
 
         private void SetButtonsContent(UIElement child)
@@ -132,192 +226,7 @@ namespace KeyboardPanelLibrary
             }
         }
 
-
-        private double FindFullMargin(KeyboardBase[] allKeyboards)
-        {
-            double allKeyboardsMaxMargin = 0;
-
-            for (int i = 0; i < allKeyboards.Length; i++)
-            {
-                double oneKeyboardMaxMargin = 0;
-
-                for (int j = 0; j < allKeyboards[i].KeysInRow.Length; j++)
-                {
-                    double maxMarginInOneLine = allKeyboards[i].CalculateAllMargin(j);
-
-                    if (maxMarginInOneLine > oneKeyboardMaxMargin)
-                    {
-                        oneKeyboardMaxMargin = maxMarginInOneLine;
-                    }
-                }
-
-                allKeyboardsMaxMargin += oneKeyboardMaxMargin;
-            }
-
-            return allKeyboardsMaxMargin;
-        }
-
-        private int FindMaxKeysNumberInAllKeyboards(KeyboardBase[] allKeyboards)
-        {
-            int maxAmountOfAllKeys = 0;
-
-            for (int i = 0; i < allKeyboards.Length; i++)
-            {
-                maxAmountOfAllKeys += allKeyboards[i].MaxAmountOfKeys;
-            }
-
-            return maxAmountOfAllKeys;
-        }
-
-        private Size SetMinWidth(double maxMarginInAllLines, Size availableSize)
-        {
-            if (Application.Current.MainWindow.Width < 30 * FindMaxKeysNumberInAllKeyboards(allKeyboards) + maxMarginInAllLines)
-            {
-                oneKeyWidth = 30;
-                double minAvailSize = 30 * FindMaxKeysNumberInAllKeyboards(allKeyboards) + maxMarginInAllLines;
-                availableSize.Width = minAvailSize;
-                Application.Current.MainWindow.MinWidth = minAvailSize;
-            }
-
-            return availableSize;
-        }
-
-        private void SetNewWidth()
-        {
-            int currentKey = 0;
-
-            for (int i = 0; i < allKeyboards.Length; i++)
-            {
-                for (int k = 0; k < allKeyboards[i].KeysInRow.Length; k++)
-                {
-                    for (int j = 0; j < allKeyboards[i].KeysInRow[k]; j++)
-                    {
-                        var widthCoefficient = KeyboardBase.GetAdditionalMetadataProperty(InternalChildren[currentKey]).WidthCoefficient;
-                        InternalChildren[currentKey].SetValue(WidthProperty, oneKeyWidth * widthCoefficient + 
-                                (allKeyboards[i].Margin.Left + allKeyboards[i].Margin.Right) * (widthCoefficient - 1));
-                        currentKey++;
-                    }
-                }
-            }
-        }
-
-        private double CountMaxAmountOfAllKeys()
-        {
-            double maxAmountOfAllKeys = 0;
-
-            for (int i = 0; i < allKeyboards.Length; i++)
-            {
-                maxAmountOfAllKeys += allKeyboards[i].CountMaxAmountOfKeys();
-            }
-
-            return maxAmountOfAllKeys;
-        }
-
-        private void ArrangeAllKeys()
-        {
-            double currentHeightShift = 0.0;
-            double currentWidthShift = 0.0;
-
-            double previousKeyboardMaxWidth = 0;
-
-            int currentKey = 0;
-
-            for (int k = 0; k < allKeyboards.Length; k++)
-            {
-                for (int i = 0; i < allKeyboards[k].KeysInRow.Length; i++)
-                {
-                    double shiftFromMaxWidth = 0;
-
-                    if (allKeyboards[k].CountMaxAmountOfKeys() - allKeyboards[k].CountAmountOfKeysInOneRow(i) != 0 )
-                    {
-                         shiftFromMaxWidth = (oneKeyWidth + allKeyboards[k].Margin.Left + allKeyboards[k].Margin.Right) 
-                            * (allKeyboards[k].CountMaxAmountOfKeys() - allKeyboards[k].CountAmountOfKeysInOneRow(i) ) / 2;
-                    }
-
-                    for (int j = 0; j < allKeyboards[k].KeysInRow[i]; j++)
-                    {
-                        InternalChildren[currentKey].Arrange(new Rect(new Point(currentWidthShift + shiftFromMaxWidth, currentHeightShift), InternalChildren[currentKey].DesiredSize));
-
-                        currentWidthShift += InternalChildren[currentKey].DesiredSize.Width;
-                        if ( k != allKeyboards.Length - 1 || i != allKeyboards[k].KeysInRow.Length - 1 || j != allKeyboards[k].KeysInRow[i] - 1)
-                        {
-                            currentKey++;
-                        }
-                    }
-
-                    if (i == allKeyboards[k].KeysInRow.Length - 1)
-                    {
-                        double currentKeyboardMaxWidth = oneKeyWidth * allKeyboards[k].CountMaxAmountOfKeys()
-                        + allKeyboards[k].CalculateAllMarginInKeyboard();
-
-                        previousKeyboardMaxWidth += currentKeyboardMaxWidth + SPACE_BETWEEN_KEYBOARDS;
-                        
-                    }
-
-                    currentWidthShift = previousKeyboardMaxWidth;
-
-                    currentHeightShift += InternalChildren[currentKey].DesiredSize.Height;
-                }
-
-                currentHeightShift = 0;
-            }
-        }
-
-        protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
-        {
-            if (visualAdded != null)
-            {
-                //visualAdded.SetValue(MarginProperty, KeyMargin);
-
-                if (visualAdded is ButtonBase)
-                {
-                    var button = visualAdded as ButtonBase;
-                    button.Click += VirtualKeyPress;
-                }
-                else if(visualAdded is ComboBox)
-                {
-                    var comboBox = visualAdded as ComboBox;
-                    comboBox.SelectionChanged += ChangeLanguage;
-                }
-            }
-
-            base.OnVisualChildrenChanged(visualAdded, visualRemoved);
-        }
-
-        public void Send(VirtualKeyCode virtualKey)
-        {
-            INPUT[] Inputs = new INPUT[1];
-            INPUT Input = new INPUT();
-            Input.type = 1; // 1 = Keyboard Input
-            Input.inputUinion.ki.wVk = virtualKey;
-            Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
-            Inputs[0] = Input;
-            SendInput(1, Inputs, INPUT.Size);
-        }
-        
-        private void VirtualKeyPress(object sender, RoutedEventArgs e)
-        {
-            var button = (ButtonBase)sender;
-            ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
-
-           // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
-            Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
-        }
-
-        private void ChangeLanguage(object sender, RoutedEventArgs e)
-        {
-            var comboBox = (ComboBox)sender;
-            CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
-
-            WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
-
-            foreach (UIElement child in InternalChildren)
-            {
-                SetButtonsContent(child);
-            }
-        }
-
-        static string GetCharsFromKeys(VirtualKeyCode keys, bool shift, bool altGr)
+        private string GetCharsFromKeys(VirtualKeyCode keys, bool shift, bool altGr)
         {
             var buf = new StringBuilder(256);
             var keyboardState = new byte[256];
@@ -331,5 +240,116 @@ namespace KeyboardPanelLibrary
             WinApi.ToUnicode((uint)keys, 0, keyboardState, buf, 256, 0);
             return buf.ToString();
         }
+
+        private void ArrangeAllKeys()
+        {
+            double currentHeightShift = 0.0;
+            double currentWidthShift = 0.0;
+
+            double previousKeyboardMaxWidth = 0;
+
+            int currentKeyboard = 0;
+            int currentKey = 0;
+            int currentKeyInLine = 0;
+
+            for (int k = 0; k < rowsWithKeys.Count; k++)
+            {
+                for (int i = 0; i < rowsWithKeys[k]; i++)
+                {
+                    double shiftFromMaxWidth = 0;
+
+                    if (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren) 
+                            - helper.CountMaxKeysInOneRow(rowsWithKeys[k], currentKeyInLine, InternalChildren) != 0)
+                    {
+                        Thickness margin = (Thickness)InternalChildren[currentKey].GetValue(MarginProperty);
+                        shiftFromMaxWidth = (oneKeyWidth + margin.Left+ margin.Right)
+                           * (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren) 
+                            - helper.CountMaxKeysInOneRow(rowsWithKeys[k], currentKeyInLine, InternalChildren)) / 2;
+                    }
+
+                    InternalChildren[currentKey].Arrange(new Rect(new Point(currentWidthShift + shiftFromMaxWidth, currentHeightShift), InternalChildren[currentKey].DesiredSize));
+
+                    currentWidthShift += InternalChildren[currentKey].DesiredSize.Width;
+
+                    if (k != rowsWithKeys.Count - 1 || i != rowsWithKeys[k] - 1)
+                    {
+                        currentKey++;
+                    }
+                }
+
+                currentWidthShift = previousKeyboardMaxWidth;
+                currentHeightShift += InternalChildren[currentKey].DesiredSize.Height;
+
+                if ((k + 1) % ROWS_COUNT == 0 && (k + 1) != 0)
+                {
+                    double currentKeyboardMaxWidth = oneKeyWidth * helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren)
+                    + helper.CalculateAllMarginInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren, (Thickness)InternalChildren[currentKey].GetValue(MarginProperty));
+
+                    previousKeyboardMaxWidth += currentKeyboardMaxWidth + SPACE_BETWEEN_KEYBOARDS;
+                    currentHeightShift = 0;
+
+                    currentWidthShift = previousKeyboardMaxWidth;
+                    currentKeyboard++;
+                }
+
+                currentKeyInLine += rowsWithKeys[k];
+            }
+        }
     }
+
+    //protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
+    //{
+    //    if (visualAdded != null)
+    //    {
+    //        //visualAdded.SetValue(MarginProperty, KeyMargin);
+
+    //        if (visualAdded is ButtonBase)
+    //        {
+    //            var button = visualAdded as ButtonBase;
+    //            button.Click += VirtualKeyPress;
+    //        }
+    //        else if(visualAdded is ComboBox)
+    //        {
+    //            var comboBox = visualAdded as ComboBox;
+    //            comboBox.SelectionChanged += ChangeLanguage;
+    //        }
+    //    }
+
+    //    base.OnVisualChildrenChanged(visualAdded, visualRemoved);
+    //}
+
+    //public void Send(VirtualKeyCode virtualKey)
+    //{
+    //    INPUT[] Inputs = new INPUT[1];
+    //    INPUT Input = new INPUT();
+    //    Input.type = 1; // 1 = Keyboard Input
+    //    Input.inputUinion.ki.wVk = virtualKey;
+    //    Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
+    //    Inputs[0] = Input;
+    //    SendInput(1, Inputs, INPUT.Size);
+    //}
+
+    //private void VirtualKeyPress(object sender, RoutedEventArgs e)
+    //{
+    //    var button = (ButtonBase)sender;
+    //    ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
+
+    //   // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
+    //    Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
+    //}
+
+    //private void ChangeLanguage(object sender, RoutedEventArgs e)
+    //{
+    //    var comboBox = (ComboBox)sender;
+    //    CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
+
+    //    WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
+
+    //    foreach (UIElement child in InternalChildren)
+    //    {
+    //        SetButtonsContent(child);
+    //    }
+    //}
+
+    //}
 }
