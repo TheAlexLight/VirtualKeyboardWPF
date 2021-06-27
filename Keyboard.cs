@@ -1,31 +1,59 @@
-﻿using KeyboardPanelLibrary.Enums;
-using KeyboardPanelLibrary.Extensions;
+﻿using KeyboardPanelLibrary.Extensions;
 using KeyboardPanelLibrary.Helper;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Media;
 using VirtualKeyboardWPF.Enums;
 
 namespace KeyboardPanelLibrary
 {
-    public class Keyboard : KeyboardBase
+    public class Keyboard : Control
     {
-        public Keyboard()
+        static Keyboard()
         {
-            //KeyList = new();
+            BackgroundProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
+            ForegroundProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White)));
+            FontSizeProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(16.0));
 
-            KeysInRow = new int[4];
+            KeyBackgroundProperty = DependencyProperty.Register(nameof(KeyBackground), typeof(Brush), typeof(Keyboard)
+                   , new PropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
+            KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(Keyboard)
+                   , new PropertyMetadata(new Thickness(2)));
         }
 
         public ComboBoxItem LanguageList { get; set; }
+
+        public static readonly DependencyProperty KeyBackgroundProperty;
+        public static readonly DependencyProperty KeyMarginProperty;
+
+        public static readonly DependencyProperty AdditionalMetadataProperty
+        = DependencyProperty.RegisterAttached("SetAdditionalMetadata", typeof(KeyboardAdditionalMetadata), typeof(Keyboard), new PropertyMetadata());
+
+        public static void SetAdditionalMetadataProperty(DependencyObject obj, KeyboardAdditionalMetadata value)
+        {
+            obj.SetValue(AdditionalMetadataProperty, value);
+        }
+
+        public static KeyboardAdditionalMetadata GetAdditionalMetadataProperty(DependencyObject obj)
+        {
+            return (KeyboardAdditionalMetadata)obj.GetValue(AdditionalMetadataProperty);
+        }
+
+        public Brush KeyBackground
+        {
+            get => (Brush)base.GetValue(KeyBackgroundProperty);
+            set => SetValue(KeyBackgroundProperty, value);
+        }
+
+        public Thickness KeyMargin
+        {
+            get => (Thickness)base.GetValue(KeyMarginProperty);
+            set => SetValue(KeyMarginProperty, value);
+        }
 
         public override void OnApplyTemplate()
         {
@@ -34,7 +62,7 @@ namespace KeyboardPanelLibrary
             FillKeyList();
         }
 
-        protected override void FillKeyList()
+        private void FillKeyList()
         {
             ItemsControl keyItemsControl = PropertyNameSearcher.FindChild<ItemsControl>(this, "keyboardItemsControl");
 
@@ -125,6 +153,20 @@ namespace KeyboardPanelLibrary
                     key.SetValue(StyleProperty, keyStyle);
                 };
             }
+        }
+
+        private UIElement SetOneKey(UIElement buttonType, VirtualKeyCode virtualKey, double widthCoefficient, int rowLocation)
+        {
+            buttonType.Focusable = false;
+
+            KeyboardAdditionalMetadata additionalMetadata = new();
+            additionalMetadata.VirtualCode = (ushort)virtualKey;
+            additionalMetadata.WidthCoefficient = widthCoefficient;
+            additionalMetadata.RowLocation = rowLocation;
+
+            SetAdditionalMetadataProperty(buttonType, additionalMetadata);
+
+            return buttonType;
         }
 
         private List<ComboBoxItem> GetLocalLanguages()

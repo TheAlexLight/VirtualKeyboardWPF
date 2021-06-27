@@ -16,7 +16,7 @@ namespace KeyboardPanelLibrary
 
             for (int j = 0; j < oneRowKeys; j++)
             {
-                double widthCoefficient = KeyboardBase.GetAdditionalMetadataProperty(internalChildren[startKey]).WidthCoefficient;
+                double widthCoefficient = Keyboard.GetAdditionalMetadataProperty(internalChildren[startKey]).WidthCoefficient;
 
                 allMargin += (keysMargin.Left + keysMargin.Right) * (widthCoefficient);
 
@@ -89,7 +89,7 @@ namespace KeyboardPanelLibrary
 
             for (int i = 0; i < oneRowKeys; i++)
             {
-                keyCount += KeyboardBase.GetAdditionalMetadataProperty(internalChildren[currentKey]).WidthCoefficient;
+                keyCount += Keyboard.GetAdditionalMetadataProperty(internalChildren[currentKey]).WidthCoefficient;
                 currentKey++;
             }
 

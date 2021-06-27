@@ -52,25 +52,14 @@ namespace KeyboardPanelLibrary
 
         public KeyboardPanel()
         {
-            //MainKeyboard = new();
-            //Numpad = new();
-
-            //allKeyboards = new KeyboardBase[2];
-
-            //allKeyboards[0] = MainKeyboard;
-            //allKeyboards[1] = Numpad;
-
+            this.Focusable = false;
         }
 
-        //private const int MAPVK_VK_TO_VSC = 0;
         private const UInt32 KLF_SETFORPROCESS = 0x00000100;
         private const double SPACE_BETWEEN_KEYBOARDS = 20;
         private const int ROWS_COUNT = 4;
         private double oneKeyWidth = 0;
 
-        //readonly KeyboardBase[] allKeyboards;
-        //public Keyboard MainKeyboard;
-        //public Numpad Numpad;
         readonly KeyboardHelper helper = new();
         List<int> rowsWithKeys;
 
@@ -110,15 +99,12 @@ namespace KeyboardPanelLibrary
         {
             List<int> rowsWithKeys = new();
 
-            //List<List<UIElement>> rowsWithKeys = new();
-            //rowsWithKeys.Add(/*List<UIElement>())*/;
-
             int currentKeyboardLine = 1;
             int keysInOneRow = 0;
 
             foreach (UIElement child in InternalChildren)
             {
-                var keyRowMetadata = KeyboardBase.GetAdditionalMetadataProperty(child).RowLocation;
+                var keyRowMetadata = Keyboard.GetAdditionalMetadataProperty(child).RowLocation;
 
                 if (keyRowMetadata == currentKeyboardLine + 1)
                 {
@@ -147,19 +133,19 @@ namespace KeyboardPanelLibrary
 
             for (int i = 0; i < rowsWithKeys.Count; i++)
             {
-                    double maxMarginInOneLine = helper.CalculateAllMarginInOneRow(rowsWithKeys[i], 
-                            (Thickness)InternalChildren[currentKey].GetValue(MarginProperty), currentKey, InternalChildren );
+                double maxMarginInOneLine = helper.CalculateAllMarginInOneRow(rowsWithKeys[i],
+                        (Thickness)InternalChildren[currentKey].GetValue(MarginProperty), currentKey, InternalChildren);
 
-                    if (maxMarginInOneLine > oneKeyboardMaxMargin)
-                    {
-                        oneKeyboardMaxMargin = maxMarginInOneLine;
-                    }
+                if (maxMarginInOneLine > oneKeyboardMaxMargin)
+                {
+                    oneKeyboardMaxMargin = maxMarginInOneLine;
+                }
 
-                    if ((i + 1) % ROWS_COUNT == 0 && i!= 0)
-                    {
-                        allKeyboardsMargin += maxMarginInOneLine;
-                        oneKeyboardMaxMargin = 0;
-                    }
+                if ((i + 1) % ROWS_COUNT == 0 && i != 0)
+                {
+                    allKeyboardsMargin += oneKeyboardMaxMargin;
+                    oneKeyboardMaxMargin = 0;
+                }
 
                 currentKey += rowsWithKeys[i];
             }
@@ -167,7 +153,7 @@ namespace KeyboardPanelLibrary
             return allKeyboardsMargin;
         }
 
-        private Size SetMinWidth( double maxMarginInAllLines, Size availableSize)
+        private Size SetMinWidth(double maxMarginInAllLines, Size availableSize)
         {
             if (Application.Current.MainWindow.Width < 30 * helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren) + maxMarginInAllLines)
             {
@@ -184,7 +170,7 @@ namespace KeyboardPanelLibrary
         {
             foreach (UIElement child in InternalChildren)
             {
-                var widthCoefficient = KeyboardBase.GetAdditionalMetadataProperty(child).WidthCoefficient;
+                var widthCoefficient = Keyboard.GetAdditionalMetadataProperty(child).WidthCoefficient;
 
                 child.SetValue(WidthProperty, oneKeyWidth * widthCoefficient
                         + (((Thickness)child.GetValue(MarginProperty)).Right + ((Thickness)child.GetValue(MarginProperty)).Left) * (widthCoefficient - 1));
@@ -205,7 +191,7 @@ namespace KeyboardPanelLibrary
             if (child is ButtonBase)
             {
                 var button = child as ButtonBase;
-                ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
+                ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
 
                 string content = "";
 
@@ -258,12 +244,12 @@ namespace KeyboardPanelLibrary
                 {
                     double shiftFromMaxWidth = 0;
 
-                    if (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren) 
+                    if (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren)
                             - helper.CountMaxKeysInOneRow(rowsWithKeys[k], currentKeyInLine, InternalChildren) != 0)
                     {
                         Thickness margin = (Thickness)InternalChildren[currentKey].GetValue(MarginProperty);
-                        shiftFromMaxWidth = (oneKeyWidth + margin.Left+ margin.Right)
-                           * (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren) 
+                        shiftFromMaxWidth = (oneKeyWidth + margin.Left + margin.Right)
+                           * (helper.CountMaxKeysInKeyboard(rowsWithKeys, currentKeyboard, ROWS_COUNT, InternalChildren)
                             - helper.CountMaxKeysInOneRow(rowsWithKeys[k], currentKeyInLine, InternalChildren)) / 2;
                     }
 
@@ -295,61 +281,57 @@ namespace KeyboardPanelLibrary
                 currentKeyInLine += rowsWithKeys[k];
             }
         }
+
+        protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
+        {
+            if (visualAdded != null)
+            {
+                if (visualAdded is ButtonBase)
+                {
+                    var button = visualAdded as ButtonBase;
+                    button.Click += VirtualKeyPress;
+                }
+                else if (visualAdded is ComboBox)
+                {
+                    var comboBox = visualAdded as ComboBox;
+                    comboBox.SelectionChanged += ChangeLanguage;
+                }
+            }
+
+            base.OnVisualChildrenChanged(visualAdded, visualRemoved);
+        }
+
+        public void Send(VirtualKeyCode virtualKey)
+        {
+            INPUT[] Inputs = new INPUT[1];
+            INPUT Input = new INPUT();
+            Input.type = 1; // 1 = Keyboard Input
+            Input.inputUinion.ki.wVk = virtualKey;
+            Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
+            Inputs[0] = Input;
+            SendInput(1, Inputs, INPUT.Size);
+        }
+
+        private void VirtualKeyPress(object sender, RoutedEventArgs e)
+        {
+            var button = (ButtonBase)sender;
+            ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
+
+            // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
+            Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
+        }
+
+        private void ChangeLanguage(object sender, RoutedEventArgs e)
+        {
+            var comboBox = (ComboBox)sender;
+            CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
+
+            WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
+
+            foreach (UIElement child in InternalChildren)
+            {
+                SetButtonsContent(child);
+            }
+        }
     }
-
-    //protected override void OnVisualChildrenChanged(DependencyObject visualAdded, DependencyObject visualRemoved)
-    //{
-    //    if (visualAdded != null)
-    //    {
-    //        //visualAdded.SetValue(MarginProperty, KeyMargin);
-
-    //        if (visualAdded is ButtonBase)
-    //        {
-    //            var button = visualAdded as ButtonBase;
-    //            button.Click += VirtualKeyPress;
-    //        }
-    //        else if(visualAdded is ComboBox)
-    //        {
-    //            var comboBox = visualAdded as ComboBox;
-    //            comboBox.SelectionChanged += ChangeLanguage;
-    //        }
-    //    }
-
-    //    base.OnVisualChildrenChanged(visualAdded, visualRemoved);
-    //}
-
-    //public void Send(VirtualKeyCode virtualKey)
-    //{
-    //    INPUT[] Inputs = new INPUT[1];
-    //    INPUT Input = new INPUT();
-    //    Input.type = 1; // 1 = Keyboard Input
-    //    Input.inputUinion.ki.wVk = virtualKey;
-    //    Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
-    //    Inputs[0] = Input;
-    //    SendInput(1, Inputs, INPUT.Size);
-    //}
-
-    //private void VirtualKeyPress(object sender, RoutedEventArgs e)
-    //{
-    //    var button = (ButtonBase)sender;
-    //    ushort virtualKey = KeyboardBase.GetAdditionalMetadataProperty(button).VirtualCode;
-
-    //   // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
-    //    Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
-    //}
-
-    //private void ChangeLanguage(object sender, RoutedEventArgs e)
-    //{
-    //    var comboBox = (ComboBox)sender;
-    //    CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
-
-    //    WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
-
-    //    foreach (UIElement child in InternalChildren)
-    //    {
-    //        SetButtonsContent(child);
-    //    }
-    //}
-
-    //}
 }
