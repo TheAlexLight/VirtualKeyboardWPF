@@ -73,7 +73,8 @@
     <Style x:Key="comboBoxStyle" TargetType="ComboBox">
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource ={RelativeSource AncestorType=local:Keyboard}}"/>
-        <Setter Property="DisplayMemberPath" Value="{Binding ComboBoxName, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+        <Setter Property="SelectedIndex" Value="1"/>
+        <Setter Property="DisplayMemberPath" Value="Content"/>
        
         <Setter Property="Template">
             <Setter.Value>
@@ -140,6 +141,12 @@
         <Setter Property="Focusable" Value="False"/>
         <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
         <Setter Property="Margin" Value="{Binding KeyMargin, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+    </Style>
+
+
+    <Style x:Key="symbolsChangerStyle" BasedOn="{StaticResource keyStyle}" TargetType="{x:Type ButtonBase}">
+        <Setter Property="Command" Value="{Binding ChangeSymbolsKey, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+        <Setter Property="CommandParameter" Value="{Binding RelativeSource={RelativeSource Self}}"/>
     </Style>
 
 </ResourceDictionary>

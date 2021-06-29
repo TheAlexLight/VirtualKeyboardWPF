@@ -2,6 +2,7 @@ E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibr
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\bin\Debug\net5.0-windows\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\bin\Debug\net5.0-windows\ref\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\bin\Debug\net5.0-windows\KeyboardPanelLibrary.pdb
+E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\Images\Images.baml
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\GeneratedInternalTypeHelper.g.cs
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary_MarkupCompile.cache
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary_MarkupCompile.lref
@@ -14,4 +15,3 @@ E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibr
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\ref\KeyboardPanelLibrary.dll
 E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.pdb
-E:\Sasha\Programming\SoftServeCourse\Applications\WPF Projects\KeyboardPanelLibrary\obj\Debug\net5.0-windows\Images\Images.baml

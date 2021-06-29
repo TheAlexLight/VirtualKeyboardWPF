@@ -63,7 +63,7 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
 
         private const UInt32 KLF_SETFORPROCESS = 0x00000100;
         private const double SPACE_BETWEEN_KEYBOARDS = 20;
-        private const int ROWS_COUNT = 4;
+        public const int ROWS_COUNT = 4;
         private double oneKeyWidth = 0;
 
         readonly KeyboardHelper helper = new();
@@ -211,15 +211,6 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
                 var button = child as ButtonBase;
                 ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
 
-                string content = "";
-
-                //bool shiftIsActive = false;
-
-                //if (virtualKey == (ushort)VirtualKeyCode.Shift)
-                //{
-                //    shiftIsActive = (Keyboard.GetAdditionalMetadataProperty(child) as ShiftAdditionalMetadata).IsActive;
-                //}
-
                 Image img = new Image();
 
                 img.Width = 40;
@@ -238,11 +229,7 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
 
                 if (img.Source == null )
                 {
-                    if (virtualKey == 0x00)
-                    {
-                        button.Content = button.Content.ToString();
-                    }
-                    else
+                    if (virtualKey != 0x00)
                     {
                         button.Content = GetCharsFromKeys((VirtualKeyCode)virtualKey, Keyboard.ShiftIsActive, false);
                     }

@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace KeyboardPanelLibrary.AdditionalMetadata
 {
-    public class ShiftAdditionalMetadata: KeyboardAdditionalMetadata
+    public class SymbolsAdditionalMetadata: KeyboardAdditionalMetadata
     {
-       public bool IsActive { get; set; }
+       public bool IsStandartKeyboard { get; set; }
     }
 }
