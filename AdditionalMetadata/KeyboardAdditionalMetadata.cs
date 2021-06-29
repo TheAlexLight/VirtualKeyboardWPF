@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace KeyboardPanelLibrary
+namespace KeyboardPanelLibrary.AdditionalMetadata
 {
     public class KeyboardAdditionalMetadata
     {

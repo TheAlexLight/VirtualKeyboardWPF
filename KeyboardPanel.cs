@@ -1,4 +1,5 @@
-﻿using KeyboardPanelLibrary.Enums;
+﻿using KeyboardPanelLibrary.AdditionalMetadata;
+using KeyboardPanelLibrary.Enums;
 using KeyboardPanelLibrary.Extensions;
 using KeyboardPanelLibrary.Extensions.Structs;
 using System;
@@ -9,6 +10,8 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using VirtualKeyboardWPF.Enums;
 using static KeyboardPanelLibrary.Extensions.WinApi;
 
@@ -47,7 +50,10 @@ namespace KeyboardPanelLibrary
     {
         static KeyboardPanel()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
+            //BackgroundProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#bbbbbb"))));
+
+
+DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
         }
 
         public KeyboardPanel()
@@ -181,8 +187,20 @@ namespace KeyboardPanelLibrary
         {
             foreach (UIElement child in InternalChildren)
             {
-                child.SetValue(HeightProperty, (availableSize.Height - (((Thickness)child.GetValue(MarginProperty)).Top
-                            + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT);
+                if (!double.IsInfinity(availableSize.Height) && availableSize.Height > 61.5 * ROWS_COUNT)
+                {
+                    child.SetValue(HeightProperty, (availableSize.Height - (((Thickness)child.GetValue(MarginProperty)).Top
+                           + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT);
+                }
+                else
+                {
+                    double heightValue = (250 - (((Thickness)child.GetValue(MarginProperty)).Top
+                         + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT;
+
+                    child.SetValue(HeightProperty, heightValue);
+                    Application.Current.MainWindow.MinHeight = SystemParameters.WindowCaptionHeight + heightValue;
+                }
+               
             }
         }
 
@@ -195,20 +213,49 @@ namespace KeyboardPanelLibrary
 
                 string content = "";
 
-                content = virtualKey switch
+                //bool shiftIsActive = false;
+
+                //if (virtualKey == (ushort)VirtualKeyCode.Shift)
+                //{
+                //    shiftIsActive = (Keyboard.GetAdditionalMetadataProperty(child) as ShiftAdditionalMetadata).IsActive;
+                //}
+
+                Image img = new Image();
+
+                img.Width = 40;
+                img.Height = 40;
+
+                img.Source = virtualKey switch
                 {
-                    0x00 => button.Content.ToString(),
-                    (ushort)VirtualKeyCode.Tab => "Tab",
-                    (ushort)VirtualKeyCode.Shift => "Shift",
-                    (ushort)VirtualKeyCode.Back => "Backspace",
-                    (ushort)VirtualKeyCode.Return => "Enter",
-                    (ushort)VirtualKeyCode.Space => "Space",
-                    (ushort)VirtualKeyCode.Left => "<",
-                    (ushort)VirtualKeyCode.Right => ">",
-                    _ => GetCharsFromKeys((VirtualKeyCode)virtualKey, false, false),
+                    (ushort)VirtualKeyCode.Tab => Application.Current.FindResource("TabDrawingImage") as DrawingImage,
+                    (ushort)VirtualKeyCode.Shift => Application.Current.FindResource("ShiftDrawingImage") as DrawingImage,
+                    (ushort)VirtualKeyCode.Back => Application.Current.FindResource("BackspaceDrawingImage") as DrawingImage,
+                    (ushort)VirtualKeyCode.Return => Application.Current.FindResource("EnterDrawingImage") as DrawingImage,
+                    (ushort)VirtualKeyCode.Left => Application.Current.FindResource("LeftArrowDrawingImage") as DrawingImage,
+                    (ushort)VirtualKeyCode.Right => Application.Current.FindResource("RightArrowDrawingImage") as DrawingImage,
+                    _ => null,
                 };
 
-                button.Content = content;
+                if (img.Source == null )
+                {
+                    if (virtualKey == 0x00)
+                    {
+                        button.Content = button.Content.ToString();
+                    }
+                    else
+                    {
+                        button.Content = GetCharsFromKeys((VirtualKeyCode)virtualKey, Keyboard.ShiftIsActive, false);
+                    }
+                }
+                else
+                {
+                    if (virtualKey == (ushort)VirtualKeyCode.Shift && Keyboard.ShiftIsActive)
+                    {
+                        img.Source = Application.Current.FindResource("ShiftDownDrawingImage") as DrawingImage;
+                    }
+
+                    button.Content = img;
+                }
             }
         }
 
@@ -289,7 +336,17 @@ namespace KeyboardPanelLibrary
                 if (visualAdded is ButtonBase)
                 {
                     var button = visualAdded as ButtonBase;
-                    button.Click += VirtualKeyPress;
+
+                    ushort virtualKeycode = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
+
+                    if (virtualKeycode == (ushort)VirtualKeyCode.Shift)
+                    {
+                        button.Click += ShiftKeyPress;
+                    }
+                    else
+                    {
+                        button.Click += VirtualKeyPress;
+                    }
                 }
                 else if (visualAdded is ComboBox)
                 {
@@ -301,13 +358,13 @@ namespace KeyboardPanelLibrary
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         }
 
-        public void Send(VirtualKeyCode virtualKey)
+        public void Send(VirtualKeyCode virtualKey, KEYEVENTF keyFlag)
         {
             INPUT[] Inputs = new INPUT[1];
             INPUT Input = new INPUT();
             Input.type = 1; // 1 = Keyboard Input
             Input.inputUinion.ki.wVk = virtualKey;
-            Input.inputUinion.ki.dwFlags = KEYEVENTF.KEYDOWN;
+            Input.inputUinion.ki.dwFlags = keyFlag;
             Inputs[0] = Input;
             SendInput(1, Inputs, INPUT.Size);
         }
@@ -318,7 +375,43 @@ namespace KeyboardPanelLibrary
             ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
 
             // int scanCode =  WinApi.MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
-            Send((VirtualKeyCode)virtualKey/*(ushort)scanCode*/);
+            Send((VirtualKeyCode)virtualKey, KEYEVENTF.KEYDOWN/*(ushort)scanCode*/);
+        }
+
+        private void ShiftKeyPress(object sender, RoutedEventArgs e)
+        {
+            var button = (ButtonBase)sender;
+            ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
+
+            //var shiftAdditionalMatadata = Keyboard.GetAdditionalMetadataProperty(button) as ShiftAdditionalMetadata;
+            //var isActive = shiftAdditionalMatadata.IsActive;
+
+            KEYEVENTF keyFlag = KEYEVENTF.KEYDOWN;
+
+            if (Keyboard.ShiftIsActive)
+            {
+                keyFlag = KEYEVENTF.KEYUP;
+                Keyboard.ShiftIsActive = false;
+            }
+            else
+            {
+                Keyboard.ShiftIsActive = true;
+            }
+
+            Send((VirtualKeyCode)virtualKey, keyFlag);
+
+            int currentKey = 0;
+
+            for (int i = 0; i < ROWS_COUNT; i++)
+            {
+                for (int j = 0; j < rowsWithKeys[i]; j++)
+                {
+                    SetButtonsContent(InternalChildren[currentKey]);
+                    currentKey++;
+                }
+            }
+
+                
         }
 
         private void ChangeLanguage(object sender, RoutedEventArgs e)

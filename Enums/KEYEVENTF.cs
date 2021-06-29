@@ -8,7 +8,7 @@ namespace KeyboardPanelLibrary.Enums
 {
 
     [Flags]
-    internal enum KEYEVENTF : uint
+    public enum KEYEVENTF : uint
     {
         KEYDOWN = 0x0000,
         EXTENDEDKEY = 0x0001,

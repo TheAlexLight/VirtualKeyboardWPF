@@ -6,17 +6,19 @@
 
     <loc:ColorConverter x:Key="colorConv"/>
 
+
+
     <Style TargetType="{x:Type local:Keyboard}">
-        <!--<Setter Property="KeyBackground" Value="{Binding KeyBackground, RelativeSource={RelativeSource AncestorType={x:Type local:Keyboard}}, Mode=TwoWay
-                , Converter={StaticResource colorConv}}"/>
-        <Setter Property="KeyWidth" Value="{Binding KeyWidth, RelativeSource={RelativeSource AncestorType={x:Type local:Keyboard}}, Mode=TwoWay}"/>-->
+        <!--<Setter Property="Background" Value="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type local:Keyboard}}, Mode=TwoWay
+                , Converter={StaticResource colorConv}}"/>-->
+        <Setter Property="Background" Value="Green"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type local:Keyboard}">
-                    <ItemsControl x:Name="keyboardItemsControl">
+                    <ItemsControl x:Name="PART_keyboardItemsControl" Background="Green">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <local:KeyboardPanel Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type local:Keyboard}}, Mode=TwoWay}"/>
+                                <local:KeyboardPanel Background="Green"/>
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                     </ItemsControl>
@@ -29,7 +31,7 @@
     
     <SolidColorBrush x:Key="NormalBrush" Color="#6e6e6e"/>
 
-    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#3d3d3d" />
+    <SolidColorBrush x:Key="WindowBackgroundBrush"  Color="#3d3d3d" />
     <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -53,6 +55,14 @@
                                   VerticalAlignment="Center"
                                   Data="M 0 0 L 4 4 L 8 0 Z"/>
         </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="ToggleButton.IsMouseOver" Value="true">
+                <Setter TargetName="Border" Property="Background" Value="Green" />
+            </Trigger>
+            <Trigger Property="ToggleButton.IsChecked" Value="true">
+                <Setter TargetName="Border" Property="Background" Value="Green" />
+            </Trigger>
+        </ControlTemplate.Triggers>
     </ControlTemplate>
 
     <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox">
@@ -61,9 +71,10 @@
 
 
     <Style x:Key="comboBoxStyle" TargetType="ComboBox">
-        <Setter Property="Background" Value="{Binding Background, RelativeSource ={RelativeSource FindAncestor, AncestorType={x:Type local:Keyboard}}, Mode=TwoWay}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource ={RelativeSource AncestorType=local:Keyboard}}"/>
-        <Setter Property="SelectedIndex" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource ={RelativeSource AncestorType=local:Keyboard}}"/>
+        <Setter Property="DisplayMemberPath" Value="{Binding ComboBoxName, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+       
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ComboBox">
@@ -125,7 +136,8 @@
 
     <Style x:Key="keyStyle" TargetType="{x:Type ButtonBase}">
         <Setter Property="Background" Value="{Binding KeyBackground, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
-        <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+        <Setter Property="Foreground" Value="{Binding KeyForeground, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
+        <Setter Property="Focusable" Value="False"/>
         <Setter Property="FontSize" Value="{Binding FontSize, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
         <Setter Property="Margin" Value="{Binding KeyMargin, RelativeSource={RelativeSource AncestorType=local:Keyboard}}"/>
     </Style>
