@@ -1,14 +1,16 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:KeyboardPanelLibrary">
   <Geometry x:Key="SpaceGeometry">F1 M24,24z M0,0z M18,9L18,13 6,13 6,9 4,9 4,15 20,15 20,9z</Geometry>
   <DrawingGroup x:Key="SpaceDrawingGroup" ClipGeometry="M0,0 V24 H24 V0 H0 Z">
-    <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource SpaceGeometry}" />
+        <GeometryDrawing Brush="#b5b5b5" />
   </DrawingGroup>
   <DrawingImage x:Key="SpaceDrawingImage" Drawing="{StaticResource SpaceDrawingGroup}" />
   <Geometry x:Key="RightArrowGeometry">F1 M512.002,512.002z M0,0z M388.425,241.951L151.609,5.79C143.85,-1.943 131.288,-1.93 123.542,5.83 115.802,13.589 115.822,26.158 123.582,33.897L346.302,256.002 123.574,478.106C115.815,485.846 115.795,498.407 123.534,506.167 127.417,510.057 132.504,512.002 137.591,512.002 142.665,512.002 147.732,510.07 151.608,506.207L388.425,270.052C392.162,266.334 394.259,261.274 394.259,256.002 394.259,250.73 392.156,245.676 388.425,241.951z</Geometry>
   <DrawingGroup x:Key="RightArrowDrawingGroup" ClipGeometry="M0,0 V512.002 H512.002 V0 H0 Z">
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource RightArrowGeometry}" />
+                <GeometryDrawing Brush="#b5b5b5" 
+                                 Geometry="{StaticResource RightArrowGeometry}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -21,8 +23,8 @@
     </DrawingGroup.Transform>
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource TabGeometry1}" />
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource TabGeometry2}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource TabGeometry1}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource TabGeometry2}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -31,7 +33,7 @@
   <DrawingGroup x:Key="LeftArrowDrawingGroup" ClipGeometry="M0,0 V443.52 H443.52 V0 H0 Z">
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource LeftArrowGeometry}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource LeftArrowGeometry}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -40,7 +42,7 @@
   <DrawingGroup x:Key="ShiftDownDrawingGroup" ClipGeometry="M0,0 V82.631 H82.631 V0 H0 Z">
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource ShiftDownGeometry}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource ShiftDownGeometry}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -52,7 +54,7 @@
     </DrawingGroup.Transform>
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource BackspaceGeometry}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource BackspaceGeometry}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -61,7 +63,7 @@
   <DrawingGroup x:Key="ShiftDrawingGroup" ClipGeometry="M0,0 V429.658 H429.658 V0 H0 Z">
     <DrawingGroup Opacity="1">
       <DrawingGroup Opacity="1">
-        <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource ShiftGeometry}" />
+                <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource ShiftGeometry}" />
       </DrawingGroup>
     </DrawingGroup>
   </DrawingGroup>
@@ -71,7 +73,7 @@
     <DrawingGroup.Transform>
       <TranslateTransform X="1.4210854715202004E-14" Y="0" />
     </DrawingGroup.Transform>
-    <GeometryDrawing Brush="#FF000000" Geometry="{StaticResource EnterGeometry}" />
+        <GeometryDrawing Brush="#b5b5b5" Geometry="{StaticResource EnterGeometry}" />
   </DrawingGroup>
   <DrawingImage x:Key="EnterDrawingImage" Drawing="{StaticResource EnterDrawingGroup}" />
 </ResourceDictionary>

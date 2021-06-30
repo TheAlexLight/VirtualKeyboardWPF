@@ -50,15 +50,12 @@ namespace KeyboardPanelLibrary
     {
         static KeyboardPanel()
         {
-            //BackgroundProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#bbbbbb"))));
-
-
-DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
         }
 
         public KeyboardPanel()
         {
-            this.Focusable = false;
+            
         }
 
         private const UInt32 KLF_SETFORPROCESS = 0x00000100;
@@ -187,20 +184,27 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
         {
             foreach (UIElement child in InternalChildren)
             {
-                if (!double.IsInfinity(availableSize.Height) && availableSize.Height > 61.5 * ROWS_COUNT)
+                //if (!double.IsInfinity(availableSize.Height) && availableSize.Height > 61.5 * ROWS_COUNT)
+                if (!double.IsInfinity(availableSize.Height))
                 {
                     child.SetValue(HeightProperty, (availableSize.Height - (((Thickness)child.GetValue(MarginProperty)).Top
                            + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT);
                 }
-                else
+                else  
                 {
-                    double heightValue = (250 - (((Thickness)child.GetValue(MarginProperty)).Top
-                         + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT;
-
-                    child.SetValue(HeightProperty, heightValue);
-                    Application.Current.MainWindow.MinHeight = SystemParameters.WindowCaptionHeight + heightValue;
+                    child.SetValue(HeightProperty, 0);
                 }
-               
+
+                //}
+                //else
+                //{
+                //    double heightValue = (250 - (((Thickness)child.GetValue(MarginProperty)).Top
+                //         + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT;
+
+                //    child.SetValue(HeightProperty, heightValue);
+                //    Application.Current.MainWindow.MinHeight = SystemParameters.WindowCaptionHeight + heightValue;
+                //}
+
             }
         }
 
@@ -227,7 +231,7 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
                     _ => null,
                 };
 
-                if (img.Source == null )
+                if (img.Source == null)
                 {
                     if (virtualKey != 0x00)
                     {
@@ -397,14 +401,12 @@ DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPro
                     currentKey++;
                 }
             }
-
-                
         }
 
         private void ChangeLanguage(object sender, RoutedEventArgs e)
         {
             var comboBox = (ComboBox)sender;
-            CultureInfo languageInfo = new CultureInfo((UInt16)((ComboBoxItem)comboBox.SelectedItem).Tag, false);
+            CultureInfo languageInfo = new CultureInfo((UInt16)((Language)comboBox.SelectedItem).Id, false);
 
             WinApi.ActivateKeyboardLayout((IntPtr)languageInfo.KeyboardLayoutId, KLF_SETFORPROCESS);
 

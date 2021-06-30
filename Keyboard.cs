@@ -11,21 +11,16 @@ using KeyboardPanelLibrary.AdditionalMetadata;
 using KeyboardPanelLibrary.Command;
 using KeyboardPanelLibrary.Enums;
 using KeyboardPanelLibrary.Extensions;
+using KeyboardPanelLibrary.ViewModels;
 using VirtualKeyboardWPF.Enums;
 
 namespace KeyboardPanelLibrary
 {
-    [TemplatePart(Name = "PART_keyboardItemsControl", Type =typeof(ItemsControl))]
+    [TemplatePart(Name = "PART_keyboardItemsControl", Type = typeof(ItemsControl))]
     public class Keyboard : Control
     {
         static Keyboard()
         {
-            BackgroundProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
-            ForegroundProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(new SolidColorBrush(Colors.White)));
-            FontSizeProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(16.0));
-            HorizontalContentAlignmentProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(HorizontalAlignment.Left));
-            VerticalAlignmentProperty.OverrideMetadata(typeof(Keyboard), new FrameworkPropertyMetadata(VerticalAlignment.Top));
-
             KeyBackgroundProperty = DependencyProperty.Register(nameof(KeyBackground), typeof(Brush), typeof(Keyboard)
                    , new PropertyMetadata(new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"))));
             KeyMarginProperty = DependencyProperty.Register(nameof(KeyMargin), typeof(Thickness), typeof(Keyboard)
@@ -33,11 +28,16 @@ namespace KeyboardPanelLibrary
             KeyForegroundProperty = DependencyProperty.Register(nameof(KeyForeground), typeof(Brush), typeof(Keyboard)
                    , new PropertyMetadata(new SolidColorBrush(Colors.White)));
             KeyboardChooseTypeProperty = DependencyProperty.Register(nameof(KeyboardChooseType), typeof(KeyboardType), typeof(Keyboard)
-                   , new PropertyMetadata(KeyboardType.FullKeyboard));
-            SymbolsKeyboardCommandProperty = DependencyProperty.Register(nameof(SymbolsKeyboardCommand),typeof(ICommand),typeof(Keyboard));
+                   , new PropertyMetadata(KeyboardType.MainKeyboard));
+        }
+        public Keyboard()
+        {
+            FontSize = 16;
+            Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"));
+            languageChanger = new();
         }
 
-        public ComboBoxItem LanguageList { get; set; }
+        private readonly LanguageChangerViewModel languageChanger;
 
         public static bool ShiftIsActive = false;
 
@@ -45,15 +45,14 @@ namespace KeyboardPanelLibrary
         public static readonly DependencyProperty KeyMarginProperty;
         public static readonly DependencyProperty KeyForegroundProperty;
         public static readonly DependencyProperty KeyboardChooseTypeProperty;
-        public static DependencyProperty SymbolsKeyboardCommandProperty;
 
-        private ICommand symbolsKeyboardCommand2 { get; set; }
+        private ICommand symbolsKeyboardCommand2;
 
         public static readonly DependencyProperty AdditionalMetadataProperty
-        = DependencyProperty.RegisterAttached("SetAdditionalMetadata", typeof(KeyboardAdditionalMetadata), typeof(Keyboard), new PropertyMetadata());
+        = DependencyProperty.RegisterAttached("AdditionalMetadata", typeof(KeyboardAdditionalMetadata), typeof(Keyboard), new PropertyMetadata());
 
         public static readonly DependencyProperty KeyboardTypeAttachedProperty
-        = DependencyProperty.RegisterAttached("SetKeyboardAttachedType", typeof(KeyboardType), typeof(UIElement), new PropertyMetadata());
+        = DependencyProperty.RegisterAttached("KeyboardTypeAttached", typeof(KeyboardType), typeof(UIElement), new PropertyMetadata());
 
         public static void SetAdditionalMetadataProperty(DependencyObject obj, KeyboardAdditionalMetadata value)
         {
@@ -65,7 +64,7 @@ namespace KeyboardPanelLibrary
             return (KeyboardAdditionalMetadata)obj.GetValue(AdditionalMetadataProperty);
         }
 
-        public static void SetSetKeyboardTypeAttachedProperty(DependencyObject obj, KeyboardType value)
+        public static void SetKeyboardTypeAttachedProperty(DependencyObject obj, KeyboardType value)
         {
             obj.SetValue(KeyboardTypeAttachedProperty, value);
         }
@@ -99,12 +98,6 @@ namespace KeyboardPanelLibrary
             set => SetValue(KeyboardChooseTypeProperty, value);
         }
 
-        public ICommand SymbolsKeyboardCommand
-        {
-            get => (ICommand)GetValue(SymbolsKeyboardCommandProperty);
-            set => SetValue(SymbolsKeyboardCommandProperty, value);
-        }
-
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -112,46 +105,39 @@ namespace KeyboardPanelLibrary
             FillKeyList(true);
         }
 
+        private void FillKeyboard(Action<ItemsControl, int> fillOneKeyboard, ItemsControl keyItemsControl)
+        {
+            switch (KeyboardChooseType)
+            {
+                case KeyboardType.FullKeyboard:
+                    fillOneKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
+                    FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 1 + 1);
+                    break;
+                case KeyboardType.MainKeyboard:
+                    fillOneKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
+                    break;
+                case KeyboardType.Numpad:
+                    FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
+                    break;
+            }
+        }
+
         private void FillKeyList(bool isStandartKeyboard)
         {
             ItemsControl keyItemsControl = GetTemplateChild("PART_keyboardItemsControl") as ItemsControl;
+
             keyItemsControl.Items.Clear();
 
             if (isStandartKeyboard)
             {
-                switch (KeyboardChooseType)
-                {
-                    case KeyboardType.FullKeyboard:
-                        FillMainKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 1 + 1);
-                        break;
-                    case KeyboardType.MainKeyboard:
-                        FillMainKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        break;
-                    case KeyboardType.Numpad:
-                        FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        break;
-                }
+                FillKeyboard(FillMainKeyboard, keyItemsControl);
             }
             else
             {
-                switch (KeyboardChooseType)
-                {
-                    case KeyboardType.FullKeyboard:
-                        FillSymbolsKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 1 + 1);
-                        break;
-                    case KeyboardType.MainKeyboard:
-                        FillSymbolsKeyboard(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        break;
-                    case KeyboardType.Numpad:
-                        FillNumpad(keyItemsControl, KeyboardPanel.ROWS_COUNT * 0 + 1);
-                        break;
-                }
+                FillKeyboard(FillSymbolsKeyboard, keyItemsControl);
             }
-           
 
-            Style keyStyle = Application.Current.FindResource("keyStyle") as Style;
+                Style keyStyle = Application.Current.FindResource("keyStyle") as Style;
             Style changeSymbolsStyle = Application.Current.FindResource("symbolsChangerStyle") as Style;
 
             foreach (UIElement key in keyItemsControl.Items)
@@ -174,7 +160,7 @@ namespace KeyboardPanelLibrary
             }
         }
 
-        private ItemsControl FillSymbolsKeyboard(ItemsControl keyItemsControl, int startRow)
+        private void FillSymbolsKeyboard(ItemsControl keyItemsControl, int startRow)
         {
             int currentRow = startRow;
 
@@ -194,6 +180,8 @@ namespace KeyboardPanelLibrary
             symbolsMetadata.WidthCoefficient = 2;
             symbolsMetadata.RowLocation = currentRow;
             symbolsMetadata.IsStandartKeyboard = false;
+
+            symbButton.DataContext = symbolsMetadata;
 
             SetAdditionalMetadataProperty(symbButton, symbolsMetadata);
 
@@ -226,11 +214,9 @@ namespace KeyboardPanelLibrary
             keyItemsControl.Items.Add(SetOneKey(new RepeatButton(), VirtualKeyCode.OEMPeriod, 1, currentRow));
             keyItemsControl.Items.Add(SetOneKey(new RepeatButton(), VirtualKeyCode.Left, 1, currentRow));
             keyItemsControl.Items.Add(SetOneKey(new RepeatButton(), VirtualKeyCode.Right, 1, currentRow));
-
-            return keyItemsControl;
         }
 
-            private ItemsControl FillMainKeyboard(ItemsControl keyItemsControl, int startRow)
+        private void FillMainKeyboard(ItemsControl keyItemsControl, int startRow)
         {
             int currentRow = startRow;
 
@@ -256,6 +242,8 @@ namespace KeyboardPanelLibrary
             symbolsMetadata.WidthCoefficient = 2;
             symbolsMetadata.RowLocation = currentRow;
             symbolsMetadata.IsStandartKeyboard = true;
+
+            symbButton.DataContext = symbolsMetadata;
 
             SetAdditionalMetadataProperty(symbButton, symbolsMetadata);
 
@@ -297,18 +285,23 @@ namespace KeyboardPanelLibrary
 
             ComboBox combo = new();
             combo = (ComboBox)SetOneKey(combo, 0, 2, currentRow);
+            combo.SelectionChanged += Combo_SelectionChanged;
+
+            combo.DataContext = languageChanger;
             var comboBoxStyle = Application.Current.FindResource("comboBoxStyle") as Style;
             combo.SetValue(StyleProperty, comboBoxStyle);
 
-            //combo.DisplayMemberPath = "Content";
-            combo.ItemsSource = GetLocalLanguages();
             keyItemsControl.Items.Add(combo);
-
             keyItemsControl.Items.Add(SetOneKey(new RepeatButton(), VirtualKeyCode.Space, 11, currentRow));
             keyItemsControl.Items.Add(SetOneKey(new RepeatButton(), VirtualKeyCode.Left, 1, currentRow)); //Left arrow
             keyItemsControl.Items.Add(SetOneKey(new Button(), VirtualKeyCode.Right, 1, currentRow)); //Right arrow
+        }
 
-            return keyItemsControl;
+        private void Combo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var comboBox = sender as ComboBox;
+            languageChanger.SelectedLanguage = (Language)comboBox.SelectedItem;
+            //throw new NotImplementedException();
         }
 
         private ItemsControl FillNumpad(ItemsControl keyItemsControl, int startRow)
@@ -351,33 +344,14 @@ namespace KeyboardPanelLibrary
             return buttonType;
         }
 
-        private List<ComboBoxItem> GetLocalLanguages()
+        void LanguageChanged(object sender, SelectionChangedEventArgs e)
         {
-            var keyboardLanguages = new List<ComboBoxItem>();
-
-            uint nElements = WinApi.GetKeyboardLayoutList(0, null);
-            IntPtr[] keyboardsIds = new IntPtr[nElements];
-            WinApi.GetKeyboardLayoutList(keyboardsIds.Length, keyboardsIds);
-
-            foreach (var keyboardId in keyboardsIds)
-            {
-                var languageId = (UInt16)((UInt32)keyboardId & 0xFFFF);
-
-                CultureInfo languageInfo = new CultureInfo(languageId, false);
-
-                ComboBoxItem comboBoxItem = new();
-                comboBoxItem.Content = languageInfo.ThreeLetterWindowsLanguageName;
-                comboBoxItem.Tag = languageId;
-
-                keyboardLanguages.Add(comboBoxItem);
-            }
-
-            return keyboardLanguages;
+            languageChanger.SelectedLanguage = (Language)(sender as ComboBox).SelectedItem;
         }
 
         public ICommand ChangeSymbolsKey => symbolsKeyboardCommand2 ??= new RelayCommand(symbButton =>
         {
-            var isStandartKeyboard = (GetAdditionalMetadataProperty((DependencyObject)symbButton) as SymbolsAdditionalMetadata).IsStandartKeyboard;
+            var isStandartKeyboard = (symbButton as SymbolsAdditionalMetadata).IsStandartKeyboard;
             isStandartKeyboard = !isStandartKeyboard;
 
             FillKeyList(isStandartKeyboard);
