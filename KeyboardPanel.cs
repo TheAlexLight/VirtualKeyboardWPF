@@ -53,11 +53,6 @@ namespace KeyboardPanelLibrary
             DefaultStyleKeyProperty.OverrideMetadata(typeof(KeyboardPanel), new FrameworkPropertyMetadata(typeof(KeyboardPanel)));
         }
 
-        public KeyboardPanel()
-        {
-            
-        }
-
         private const UInt32 KLF_SETFORPROCESS = 0x00000100;
         private const double SPACE_BETWEEN_KEYBOARDS = 20;
         public const int ROWS_COUNT = 4;
@@ -74,11 +69,19 @@ namespace KeyboardPanelLibrary
 
             double maxMarginInAllLines = FindFullMargin(rowsWithKeys) + SPACE_BETWEEN_KEYBOARDS * (rowsWithKeys.Count / ROWS_COUNT - 1);
 
-            oneKeyWidth = (availSize.Width - maxMarginInAllLines) / helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren);
+            if (!double.IsInfinity(availSize.Width))
+            {
+                oneKeyWidth = (availSize.Width - maxMarginInAllLines) / helper.CountMaxKeysInAllRows(rowsWithKeys, ROWS_COUNT, InternalChildren);
 
-            //////Application.Current.MainWindow.MinHeight = (mainKeyboard.Height + mainKeyboard.Margin.Top + mainKeyboard.Margin.Bottom) * 4  + SystemParameters.WindowCaptionHeight;
+                SetMinWidth(maxMarginInAllLines, availSize);
 
-            SetMinWidth(maxMarginInAllLines, availSize);
+            }
+            else
+            {
+                oneKeyWidth = 0;
+                availSize.Width = 0;
+            }
+
             SetNewWidth();
             SetNewHeight(availSize);
 
@@ -184,27 +187,15 @@ namespace KeyboardPanelLibrary
         {
             foreach (UIElement child in InternalChildren)
             {
-                //if (!double.IsInfinity(availableSize.Height) && availableSize.Height > 61.5 * ROWS_COUNT)
-                if (!double.IsInfinity(availableSize.Height))
+                if (double.IsInfinity(availableSize.Height))
+                {
+                    child.SetValue(HeightProperty, 0.0);
+                }
+                else if (availableSize.Height >= 31.5 * ROWS_COUNT)
                 {
                     child.SetValue(HeightProperty, (availableSize.Height - (((Thickness)child.GetValue(MarginProperty)).Top
                            + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT);
                 }
-                else  
-                {
-                    child.SetValue(HeightProperty, 0);
-                }
-
-                //}
-                //else
-                //{
-                //    double heightValue = (250 - (((Thickness)child.GetValue(MarginProperty)).Top
-                //         + ((Thickness)child.GetValue(MarginProperty)).Bottom) * ROWS_COUNT) / ROWS_COUNT;
-
-                //    child.SetValue(HeightProperty, heightValue);
-                //    Application.Current.MainWindow.MinHeight = SystemParameters.WindowCaptionHeight + heightValue;
-                //}
-
             }
         }
 
@@ -349,7 +340,7 @@ namespace KeyboardPanelLibrary
             base.OnVisualChildrenChanged(visualAdded, visualRemoved);
         }
 
-        public void Send(VirtualKeyCode virtualKey, KEYEVENTF keyFlag)
+        public static void Send(VirtualKeyCode virtualKey, KEYEVENTF keyFlag)
         {
             INPUT[] Inputs = new INPUT[1];
             INPUT Input = new INPUT();
@@ -369,13 +360,10 @@ namespace KeyboardPanelLibrary
             Send((VirtualKeyCode)virtualKey, KEYEVENTF.KEYDOWN/*(ushort)scanCode*/);
         }
 
-        private void ShiftKeyPress(object sender, RoutedEventArgs e)
+        public void ShiftKeyPress(object sender, RoutedEventArgs e)
         {
             var button = (ButtonBase)sender;
             ushort virtualKey = Keyboard.GetAdditionalMetadataProperty(button).VirtualCode;
-
-            //var shiftAdditionalMatadata = Keyboard.GetAdditionalMetadataProperty(button) as ShiftAdditionalMetadata;
-            //var isActive = shiftAdditionalMatadata.IsActive;
 
             KEYEVENTF keyFlag = KEYEVENTF.KEYDOWN;
 

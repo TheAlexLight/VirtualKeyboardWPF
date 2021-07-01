@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using KeyboardPanelLibrary.AdditionalMetadata;
 using KeyboardPanelLibrary.Command;
 using KeyboardPanelLibrary.Enums;
@@ -32,12 +33,15 @@ namespace KeyboardPanelLibrary
         }
         public Keyboard()
         {
-            FontSize = 16;
+            FontSize = 24;
             Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#3d3d3d"));
             languageChanger = new();
+
+            EventManager.RegisterClassHandler(typeof(UIElement), GotKeyboardFocusEvent, (KeyboardFocusChangedEventHandler)OnKeyboardFocusChanged);
         }
 
         private readonly LanguageChangerViewModel languageChanger;
+        private Storyboard hiddenPanelStoryBoard;
 
         public static bool ShiftIsActive = false;
 
@@ -69,7 +73,7 @@ namespace KeyboardPanelLibrary
             obj.SetValue(KeyboardTypeAttachedProperty, value);
         }
 
-        public static KeyboardType GetSetKeyboardTypeAttachedProperty(DependencyObject obj)
+        public static KeyboardType GetKeyboardTypeAttachedProperty(DependencyObject obj)
         {
             return (KeyboardType)obj.GetValue(KeyboardTypeAttachedProperty);
         }
@@ -105,8 +109,69 @@ namespace KeyboardPanelLibrary
             FillKeyList(true);
         }
 
+        public void OnKeyboardFocusChanged(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            if (sender is TextBox)
+            {
+                var textBoxKeyboardType = GetKeyboardTypeAttachedProperty((DependencyObject)sender);
+                KeyboardChooseType = textBoxKeyboardType;
+
+                FillKeyList(true);
+
+                //ItemsControl keyItemsControl = GetTemplateChild("PART_keyboardItemsControl") as ItemsControl;
+
+                //var hiddenPanelAnimation = new DoubleAnimation();
+                //hiddenPanelAnimation.From = 0.0;
+                //hiddenPanelAnimation.To = 1.0;
+                //hiddenPanelAnimation.Duration = new Duration(TimeSpan.FromSeconds(0));
+
+                //hiddenPanelStoryBoard = new Storyboard();
+                //hiddenPanelStoryBoard.Children.Add(hiddenPanelAnimation);
+                //Storyboard.SetTargetName(hiddenPanelAnimation, keyItemsControl.Name);
+                //Storyboard.SetTargetProperty(hiddenPanelAnimation, new PropertyPath(ItemsControl.HeightProperty));
+
+                //hiddenPanelStoryBoard.Begin(keyItemsControl);
+            }
+            else
+            {
+                //ItemsControl keyItemsControl = GetTemplateChild("PART_keyboardItemsControl") as ItemsControl;
+                //var doubleAnimationY = new DoubleAnimation();
+
+                //doubleAnimationY.From = 1;
+                //doubleAnimationY.To = 0;
+                //doubleAnimationY.Duration = TimeSpan.FromSeconds(2.0);
+
+                //var scaleTransform = new ScaleTransform(1, 1);
+
+                //this.LayoutTransform = scaleTransform;
+                //scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, doubleAnimationY);
+
+                
+
+                //var hiddenPanelAnimation = new DoubleAnimation();
+                //hiddenPanelAnimation.From = 1.0;
+                //hiddenPanelAnimation.To = 0.0;
+                //hiddenPanelAnimation.Duration = new Duration(TimeSpan.FromSeconds(0));
+
+                //hiddenPanelStoryBoard = new Storyboard();
+                //hiddenPanelStoryBoard.Children.Add(hiddenPanelAnimation);
+                //Storyboard.SetTargetName(hiddenPanelAnimation, keyItemsControl.Name);
+                //Storyboard.SetTargetProperty(hiddenPanelAnimation, new PropertyPath(ItemsControl.HeightProperty));
+
+                //hiddenPanelStoryBoard.Begin(keyItemsControl);
+
+            }
+        }
+
         private void FillKeyboard(Action<ItemsControl, int> fillOneKeyboard, ItemsControl keyItemsControl)
         {
+            if (ShiftIsActive)
+            {
+                ShiftIsActive = false;
+                KeyboardPanel.Send(VirtualKeyCode.Shift, KEYEVENTF.KEYUP);
+            }
+            
+
             switch (KeyboardChooseType)
             {
                 case KeyboardType.FullKeyboard:
