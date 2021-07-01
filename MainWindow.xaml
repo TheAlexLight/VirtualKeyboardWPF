@@ -4,9 +4,51 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VirtualKeyboardWPF"
+        xmlns:keyboard="clr-namespace:KeyboardPanelLibrary;assembly=KeyBoardPanelLibrary" 
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow" Height="800" Width="1600">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Style/TextBlock.xaml"/>
+                <ResourceDictionary Source="Style/TextBox.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid x:Name="keyboardGrid" 
+          MouseDown="keyboardGrid_MouseDown"
+          Focusable="True"
+          Background="#3e91ab">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"  Grid.Row="0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Style="{StaticResource registrationTextBlock}"
+                           Text="Name"/>
+                <TextBox Style="{StaticResource registrationTextBox}"
+                         keyboard:Keyboard.KeyboardTypeAttachedProperty="MainKeyboard"/>
+            </StackPanel>
+            
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Style="{StaticResource registrationTextBlock}"
+                           Text="Email"/>
+                <TextBox Style="{StaticResource registrationTextBox}"
+                         keyboard:Keyboard.KeyboardTypeAttachedProperty="FullKeyboard"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Style="{StaticResource registrationTextBlock}" 
+                           Text="Id"/>
+                <TextBox Style="{StaticResource registrationTextBox}"
+                         keyboard:Keyboard.KeyboardTypeAttachedProperty="Numpad"/>
+            </StackPanel>
+        </StackPanel>
+
+        <keyboard:Keyboard  Grid.Row="1" />
     </Grid>
 </Window>

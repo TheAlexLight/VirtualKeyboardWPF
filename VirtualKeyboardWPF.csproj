@@ -6,4 +6,20 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="AssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove=".gitignore" />
+    <None Remove="LICENSE" />
+    <None Remove="README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="KeyboardPanelLibrary">
+      <HintPath>..\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
