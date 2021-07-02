@@ -7,6 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="VirtualKeyboardPanel\**" />
+    <EmbeddedResource Remove="VirtualKeyboardPanel\**" />
+    <None Remove="VirtualKeyboardPanel\**" />
+    <Page Remove="VirtualKeyboardPanel\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="AssemblyInfo.cs" />
   </ItemGroup>
 
@@ -18,7 +25,7 @@
 
   <ItemGroup>
     <Reference Include="KeyboardPanelLibrary">
-      <HintPath>..\KeyboardPanelLibrary\obj\Debug\net5.0-windows\KeyboardPanelLibrary.dll</HintPath>
+      <HintPath>VirtualKeyboardPanel\bin\Debug\net5.0-windows\KeyboardPanelLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 
